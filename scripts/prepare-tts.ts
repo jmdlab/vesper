@@ -111,10 +111,21 @@ export function stripBreathingLines(raw: string): string {
   // are not captured). Accepted phase verbs: Inspir…, Expir…, Reten…
   // Accepted separators between verb and its argument: whitespace OR ellipsis
   // (so "Inspirez..." with trailing dots also matches).
-  // Alternative #1: EN with lead-in. "Again. " or "One more. " followed by any
-  // EN phase verb INCLUDING bare "In" (the context resolves the ambiguity;
-  // bare "In" alone is too loose for false-positives like "In this moment").
-  const enLeadIn  = '(?:Again|One\\s+more)\\.\\s+(?:Breathe\\s+in\\b|Breathe\\s+out\\b|Inhale\\b|Exhale\\b|Hold\\b|In\\b|Out\\b)'
+  // Alternative #1: EN with lead-in. Recognized lead-ins:
+  //   "Again."
+  //   "One more."        (exact)
+  //   "One more time."
+  //   "One more cycle."
+  //   "Once more."       (variant of "One more.")
+  // followed by any EN phase verb INCLUDING bare "In" (the context resolves
+  // the ambiguity; bare "In" alone is too loose for false-positives like
+  // "In this moment"). Added 2026-04-11 to fix regex holes discovered during
+  // EN pre-flight (9 meditations used Once more. / One more time. variants
+  // and were silently skipping the strip).
+  // Continuation = phase verb, optionally modified by a pace adjective.
+  // Covers: "Inhale", "Deep inhale", "Slow breath in", "Quick breath", etc.
+  const enPhaseVerb = '(?:(?:Deep|Slow|Long|Quick|Sharp)\\s+)?(?:Breath\\s+in\\b|Breathe\\s+in\\b|Breathe\\s+out\\b|Inhale\\b|Exhale\\b|Hold\\b|In\\b|Out\\b|Breath\\b|Fill\\b|Release\\b)'
+  const enLeadIn  = `(?:Again|Once\\s+more|One\\s+more(?:\\s+(?:time|cycle))?)\\.\\s+${enPhaseVerb}`
 
   // Alternative #2: EN direct (no lead-in). Bare "In" NOT allowed; "In for X"
   // and "Out for X" only, Hold must be followed by "for" or "gently".
