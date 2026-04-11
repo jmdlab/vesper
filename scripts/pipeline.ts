@@ -275,10 +275,26 @@ function handleDeploy(): void {
   const skipBuild = args.includes('--skip-build')
   const skipAudio = args.includes('--skip-audio')
   const skipGit = args.includes('--skip-git')
+  const skipQA = args.includes('--skip-qa')
 
   const DEPLOY_DIR = '/var/www/vesper-static'
 
   console.log('\n=== Vesper Deploy ===\n')
+
+  // 0. QA gate — never ship broken audio. --skip-qa is for emergencies only.
+  if (!skipQA) {
+    console.log('0. Running QA (all meditations, all languages)...')
+    try {
+      run('npx', ['tsx', 'scripts/qa-meditations.ts'])
+      console.log('   QA passed.\n')
+    } catch {
+      console.error('   QA FAILED — aborting deploy.')
+      console.error('   Fix the failures reported above, or use --skip-qa to bypass (not recommended).')
+      process.exit(1)
+    }
+  } else {
+    console.log('0. QA skipped (--skip-qa)\n')
+  }
 
   // 0. Validate env — base must be '/' for vesper.pm
   const astroBase = process.env.ASTRO_BASE || ''
@@ -568,6 +584,97 @@ function handleSegment(): void {
   }
 }
 
+// ─── SHIP command ────────────────────────────────────────────────────────────
+// Single-command slug → shippable result.
+// Runs: validate → generate-tts → insert-breathing → qa → copy-to-public.
+// Intended workflow: author edits scriptEn/scriptFr in a content JSON, runs
+// `pipeline.ts ship <slug>`, listens in the app. Fails hard on QA red.
+
+function handleShip(): void {
+  const args = process.argv.slice(3)
+  const slug = args.find(a => !a.startsWith('--'))
+  const langArg = args.find(a => a.startsWith('--lang='))?.split('=')[1] as 'en' | 'fr' | undefined
+  const dryRun = args.includes('--dry-run')
+  const force = args.includes('--force')
+
+  if (!slug) {
+    console.error('Usage: pipeline.ts ship <slug> [--lang=en|fr] [--dry-run] [--force]')
+    process.exit(1)
+  }
+
+  const med = loadMeditation(slug)
+  if (!med) {
+    console.error(`Meditation not found: ${slug}`)
+    process.exit(1)
+  }
+
+  const langs: Array<'en' | 'fr'> = langArg ? [langArg] : (['en', 'fr'] as const).filter(l => {
+    const script = l === 'fr' ? med.scriptFr : med.scriptEn
+    return script && String(script).trim().length > 0
+  }) as Array<'en' | 'fr'>
+
+  console.log(`\n=== Ship ${slug} ===`)
+  console.log(`Languages: ${langs.join(', ')}`)
+  if (dryRun) console.log('Mode: DRY RUN')
+  console.log('')
+
+  for (const lang of langs) {
+    console.log(`── ${lang} ──`)
+
+    // 1. Generate TTS (skip if audio already exists and --force not passed)
+    console.log('  [1/4] TTS...')
+    const ttsArgs = ['tsx', 'scripts/generate-tts.ts', slug, `--lang=${lang}`]
+    if (dryRun) ttsArgs.push('--dry-run')
+    if (force) ttsArgs.push('--force')
+    try {
+      run('npx', ttsArgs)
+    } catch {
+      console.error(`  TTS failed for ${slug} (${lang})`)
+      process.exit(1)
+    }
+    if (dryRun) continue
+
+    // 2. Insert breathing (idempotent: always restores from tts-original first)
+    if (med.breathing) {
+      console.log('  [2/4] Insert breathing clips...')
+      try {
+        run('npx', ['tsx', 'scripts/insert-breathing.ts', slug, `--lang=${lang}`])
+      } catch {
+        console.error(`  insert-breathing failed for ${slug} (${lang})`)
+        process.exit(1)
+      }
+    } else {
+      console.log('  [2/4] No breathing pattern — skipped')
+    }
+
+    // 3. QA gate for this slug
+    console.log('  [3/4] QA...')
+    try {
+      run('npx', ['tsx', 'scripts/qa-meditations.ts', slug, `--lang=${lang}`])
+    } catch {
+      console.error(`  QA failed for ${slug} (${lang}) — NOT shipping`)
+      process.exit(1)
+    }
+
+    // 4. Copy to public/audio (generate-tts + insert-breathing already do this,
+    //    but make it explicit so `ship` has one clear deployment surface).
+    console.log('  [4/4] Copy to public/audio...')
+    const audioSrc = join(AUDIO_DIR, lang)
+    const audioDst = join(PROJECT_ROOT, 'public', 'audio', lang)
+    if (!existsSync(audioDst)) mkdirSync(audioDst, { recursive: true })
+    for (const ext of ['.mp3', '.json']) {
+      const src = join(audioSrc, `${slug}${ext}`)
+      const dst = join(audioDst, `${slug}${ext}`)
+      if (existsSync(src)) cpSync(src, dst)
+    }
+    console.log('')
+  }
+
+  console.log(`=== Ship complete: ${slug} ${langs.join('+')} ===\n`)
+  console.log(`Next: visit http://localhost:3100/meditate/${slug}/ or run:`)
+  console.log(`  npx tsx scripts/pipeline.ts deploy`)
+}
+
 // ─── ASSEMBLE command ────────────────────────────────────────────────────────
 
 function handleAssemble(): void {
@@ -593,7 +700,8 @@ function main(): void {
     console.log('Commands:')
     console.log('  create         Create skeleton meditation JSON files')
     console.log('  generate-tts   Generate TTS audio (delegates to generate-tts.ts)')
-    console.log('  deploy         Build, copy, and push to production')
+    console.log('  ship           Full pipeline for one slug: TTS → breathing → QA → public/audio')
+    console.log('  deploy         QA-gated build, copy, and push to production')
     console.log('  status         Show content status (scripts, audio, missing)')
     console.log('  import         Import scripts from rewrites/ txt files into JSON')
     console.log('  post-process   Run breathing fix + whisper align + segmentation')
@@ -623,6 +731,9 @@ function main(): void {
       break
     case 'generate-tts':
       handleGenerateTTS()
+      break
+    case 'ship':
+      handleShip()
       break
     case 'deploy':
       handleDeploy()

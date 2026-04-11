@@ -78,6 +78,25 @@ function insertBreathing(slug: string, lang: string, dryRun: boolean): boolean {
     return false
   }
 
+  // IDEMPOTENCY: always work from the clean TTS source, never from a previous
+  // insert-breathing run's output. Without this, re-running after a scriptFr
+  // edit leaves stale breathing baked into the audio (the bug that caused
+  // meditate-anxiety-release FR to have 9 "last one" announcements).
+  const ttsOriginalMp3 = mp3Path.replace('.mp3', '.tts-original.mp3')
+  const ttsOriginalJson = alignPath.replace('.json', '.tts-original.json')
+
+  if (!existsSync(ttsOriginalMp3)) {
+    // First run for this meditation: snapshot the clean TTS output.
+    cpSync(mp3Path, ttsOriginalMp3)
+    cpSync(alignPath, ttsOriginalJson)
+    console.log(`    Saved TTS original snapshot`)
+  } else {
+    // Subsequent run: restore from the clean source before processing.
+    cpSync(ttsOriginalMp3, mp3Path)
+    cpSync(ttsOriginalJson, alignPath)
+    console.log(`    Restored from TTS original (idempotent re-run)`)
+  }
+
   const alignment: AlignmentJSON = JSON.parse(readFileSync(alignPath, 'utf-8'))
 
   // Find ALL [BREATHING_SECTION] markers
@@ -89,15 +108,14 @@ function insertBreathing(slug: string, lang: string, dryRun: boolean): boolean {
     return true
   }
 
-  // Process from last to first to preserve earlier indices
+  // Process from last to first. Since we always restored from tts-original
+  // above, the initial indices are valid, and processing in reverse keeps
+  // earlier indices valid through each iteration (we only mutate content
+  // AT or AFTER markerIdx).
   for (const markerIdx of [...markerIndices].reverse()) {
     console.log(`    Processing marker at line ${markerIdx}...`)
     if (!insertBreathingAtMarker(slug, lang, med, mp3Path, alignPath, markerIdx, dryRun)) {
       return false
-    }
-    // Reload alignment after each insertion (timestamps shifted)
-    if (markerIndices.indexOf(markerIdx) > 0) {
-      // Not needed for last-to-first processing
     }
   }
 
@@ -163,14 +181,8 @@ function insertBreathingAtMarker(
     }
   }
 
-  // Preserve original TTS output (idempotency: always work from the TTS source)
-  const ttsOriginal = mp3Path.replace('.mp3', '.tts-original.mp3')
-  const ttsOriginalJson = alignPath.replace('.json', '.tts-original.json')
-  if (!existsSync(ttsOriginal)) {
-    cpSync(mp3Path, ttsOriginal)
-    cpSync(alignPath, ttsOriginalJson)
-    console.log(`    Saved TTS original`)
-  }
+  // Note: tts-original snapshot + restore happens in insertBreathing() above,
+  // not here, so this function always works against a clean/restored source.
 
   // Build breathing audio
   console.log(`    Pattern: ${inhale}-${holdIn}-${exhale}-${holdOut} × ${rounds}`)
@@ -227,14 +239,37 @@ function insertBreathingAtMarker(
   ], { stdio: 'pipe' })
 
   // Cut post-marker
-  // Find where spoken content resumes after the marker silence
+  // Find where spoken content resumes after the marker silence.
+  // Guard against corrupted ElevenLabs alignments where consecutive lines
+  // collapse into the same timestamp (seen as a >20s "long pause" span with
+  // zero-width internal timestamps). When detected, skip past the corrupted
+  // region and fall back to the silencedetect estimate if nothing looks clean.
   let resumeTime = insertTime
+  let resumeFound = false
   for (let i = markerIdx + 1; i < alignment.lines.length; i++) {
     const clean = alignment.lines[i].replace(/\[(long|short)\s+pause\]/g, '').trim()
-    if (clean) {
-      resumeTime = alignment.timestamps[i].start
-      break
-    }
+    if (!clean) continue
+    const ts = alignment.timestamps[i]
+    // Reject timestamps that are before or equal to the cut point (would cause
+    // a reverse/zero-length post segment) — happens with collapsed regions.
+    if (ts.start <= insertTime + 0.05) continue
+    resumeTime = ts.start
+    resumeFound = true
+    break
+  }
+  if (!resumeFound) {
+    // Corrupted alignment: fall back to a conservative jump past the rough
+    // silence window.  Assumes the spoken content resumes within ~2s of the
+    // cut point.  Better than overlapping or skipping content.
+    resumeTime = Math.max(insertTime + 0.5, roughTime + 2)
+    console.warn(`    ⚠ corrupted alignment near marker ${markerIdx} — using fallback resumeTime ${resumeTime.toFixed(1)}s`)
+  }
+  // Hard invariant: resumeTime must be strictly after insertTime or ffmpeg
+  // will produce a zero-length / reversed post segment and the concat will
+  // silently drop content.
+  if (resumeTime <= insertTime) {
+    console.error(`    ✗ invariant violated: resumeTime=${resumeTime} ≤ insertTime=${insertTime}`)
+    return false
   }
 
   execFileSync('ffmpeg', [
@@ -276,12 +311,27 @@ function insertBreathingAtMarker(
   // Breathing instruction lines
   const INTER_PHASE_GAP = 0.5
   const INTER_ROUND_GAP = 2.0
-  const instrLabels: Record<string, string[]> = {
-    inhale: ['Breathe in through your nose for four.', 'Again. In for four.', 'In for four.', 'One more. In for four.'],
-    hold_in: ['Hold gently for four.', 'Hold for four.'],
-    exhale: ['Exhale slowly through your mouth for four.', 'Out for four.', 'Out for four.'],
-    hold_out: ['And hold for four.', 'Hold for four.'],
+  // Captions must match the voice clips that will actually play (koraly = FR,
+  // katherine = EN — see buildBreathingAudio voice selection). Without
+  // per-language labels the player would display English text over French
+  // audio. Labels are keyed [first, again, middle, last] matching the clip
+  // variant selection logic below (r===1 → first; r===2 → again;
+  // r===rounds → last; else → middle).
+  const INSTR_LABELS: Record<string, Record<string, string[]>> = {
+    en: {
+      inhale:   ['Breathe in through your nose for four.', 'Again. In for four.',   'In for four.',  'One more. In for four.'],
+      hold_in:  ['Hold gently for four.',                   'Hold for four.',          'Hold for four.', 'Hold for four.'],
+      exhale:   ['Exhale slowly through your mouth.',       'Out for four.',           'Out for four.',  'Out for four.'],
+      hold_out: ['And hold for four.',                      'Hold for four.',          'Hold for four.', 'Hold for four.'],
+    },
+    fr: {
+      inhale:   ['Inspirez par le nez, quatre temps.',      'Encore. Inspirez sur quatre.', 'Inspirez sur quatre.', 'Une dernière fois. Inspirez sur quatre.'],
+      hold_in:  ['Retenez doucement sur quatre.',           'Retenez sur quatre.',          'Retenez sur quatre.',  'Retenez sur quatre.'],
+      exhale:   ['Expirez par la bouche, quatre temps.',    'Expirez sur quatre.',          'Expirez sur quatre.',  'Expirez sur quatre.'],
+      hold_out: ['Et retenez sur quatre.',                  'Retenez sur quatre.',          'Retenez sur quatre.',  'Retenez sur quatre.'],
+    },
   }
+  const instrLabels = INSTR_LABELS[lang] ?? INSTR_LABELS.en
 
   const phases: Array<[string, number]> = []
   if (inhale > 0) phases.push(['inhale', inhale])
@@ -294,10 +344,16 @@ function insertBreathingAtMarker(
     for (let p = 0; p < phases.length; p++) {
       const [type, dur] = phases[p]
       const labels = instrLabels[type] ?? ['...']
+      // Index mirrors buildBreathingAudio clip variant selection:
+      //   [0]=first (round 1), [1]=again (round 2 inhale),
+      //   [2]=middle (rounds 3..n-1), [3]=last (final round inhale).
+      // Order: check "last" BEFORE "again" so rounds===2 final round
+      // correctly picks "last" (previously picked "again" due to wrong order).
       let label: string
       if (r === 1) label = labels[0]
       else if (r === rounds && type === 'inhale') label = labels[Math.min(3, labels.length - 1)]
-      else label = labels[Math.min(1, labels.length - 1)]
+      else if (r === 2 && type === 'inhale') label = labels[Math.min(1, labels.length - 1)]
+      else label = labels[Math.min(2, labels.length - 1)]
 
       const end = cursor + dur
       newLines.push(label)

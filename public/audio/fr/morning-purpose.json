@@ -6,22 +6,22 @@
     "Avant de penser à ce que vous devez faire aujourd'hui... commençons par qui vous êtes.",
     "[long pause]",
     "[long pause]",
-    "Breathe in through your nose for four.",
-    "Hold gently for four.",
-    "Exhale slowly through your mouth for four.",
-    "And hold for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Hold for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Hold for four.",
-    "One more. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Hold for four.",
+    "Inspirez par le nez, quatre temps.",
+    "Retenez doucement sur quatre.",
+    "Expirez par la bouche, quatre temps.",
+    "Et retenez sur quatre.",
+    "Encore. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Retenez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Retenez sur quatre.",
+    "Une dernière fois. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Retenez sur quatre.",
     "Bien. Sentez votre corps se poser. Remarquez le sol sous vous... la surface qui porte votre poids. Vous n'avez pas besoin de vous soutenir en ce moment. Vous êtes porté.",
     "[long pause]",
     "[long pause]",
@@ -171,237 +171,237 @@
       "end": 87.18
     },
     {
+      "start": 85.725,
+      "end": 85.725
+    },
+    {
+      "start": 85.725,
+      "end": 85.737
+    },
+    {
+      "start": 85.737,
+      "end": 85.737
+    },
+    {
+      "start": 85.737,
+      "end": 87.179
+    },
+    {
       "start": 87.179,
       "end": 87.179
     },
     {
       "start": 87.179,
-      "end": 87.191
+      "end": 87.179
     },
     {
-      "start": 87.191,
-      "end": 87.191
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 87.191,
-      "end": 88.633
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 87.179,
+      "end": 87.179
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 87.179,
+      "end": 91.968
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 91.968,
+      "end": 91.968
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 91.968,
+      "end": 93.724
     },
     {
-      "start": 88.633,
-      "end": 88.633
+      "start": 93.724,
+      "end": 93.724
     },
     {
-      "start": 88.633,
-      "end": 93.422
+      "start": 93.724,
+      "end": 93.724
     },
     {
-      "start": 93.422,
-      "end": 93.422
+      "start": 93.724,
+      "end": 93.724
     },
     {
-      "start": 93.422,
-      "end": 95.178
+      "start": 93.724,
+      "end": 95.913
     },
     {
-      "start": 95.178,
-      "end": 95.178
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 95.178,
-      "end": 95.178
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 95.178,
-      "end": 95.178
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 95.178,
-      "end": 97.367
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 95.913,
+      "end": 95.913
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 95.913,
+      "end": 96.993
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 96.993,
+      "end": 96.993
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 96.993,
+      "end": 96.993
     },
     {
-      "start": 97.367,
-      "end": 97.367
+      "start": 96.993,
+      "end": 96.993
     },
     {
-      "start": 97.367,
-      "end": 98.447
+      "start": 96.993,
+      "end": 98.913
     },
     {
-      "start": 98.447,
-      "end": 98.447
+      "start": 98.913,
+      "end": 101.026
     },
     {
-      "start": 98.447,
-      "end": 98.447
+      "start": 101.026,
+      "end": 101.853
     },
     {
-      "start": 98.447,
-      "end": 98.447
+      "start": 101.853,
+      "end": 101.853
     },
     {
-      "start": 98.447,
-      "end": 100.367
+      "start": 101.853,
+      "end": 103.612
     },
     {
-      "start": 100.367,
-      "end": 102.48
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 102.48,
-      "end": 103.307
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 103.307,
-      "end": 103.307
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 103.307,
-      "end": 105.066
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 103.612,
+      "end": 103.612
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 103.612,
+      "end": 116.389
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 116.389,
+      "end": 118.866
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 121.661,
+      "end": 139.16
     },
     {
-      "start": 105.066,
-      "end": 105.066
+      "start": 139.16,
+      "end": 386.064
     },
     {
-      "start": 105.066,
-      "end": 117.843
+      "start": 386.064,
+      "end": 386.862
     },
     {
-      "start": 117.843,
-      "end": 120.32
+      "start": 386.862,
+      "end": 386.862
     },
     {
-      "start": 123.115,
-      "end": 140.614
+      "start": 386.862,
+      "end": 389.1
     },
     {
-      "start": 140.614,
-      "end": 387.518
+      "start": 389.1,
+      "end": 389.1
     },
     {
-      "start": 387.518,
-      "end": 388.316
+      "start": 389.1,
+      "end": 391.658
     },
     {
-      "start": 388.316,
-      "end": 388.316
+      "start": 391.658,
+      "end": 394.295
     },
     {
-      "start": 388.316,
-      "end": 390.554
+      "start": 394.295,
+      "end": 394.295
     },
     {
-      "start": 390.554,
-      "end": 390.554
+      "start": 394.295,
+      "end": 394.295
     },
     {
-      "start": 390.554,
-      "end": 393.112
+      "start": 394.295,
+      "end": 394.295
     },
     {
-      "start": 393.112,
-      "end": 395.749
+      "start": 394.295,
+      "end": 407.077
     },
     {
-      "start": 395.749,
-      "end": 395.749
+      "start": 407.077,
+      "end": 413.857
     },
     {
-      "start": 395.749,
-      "end": 395.749
-    },
-    {
-      "start": 395.749,
-      "end": 395.749
-    },
-    {
-      "start": 395.749,
-      "end": 408.531
-    },
-    {
-      "start": 408.531,
-      "end": 415.311
-    },
-    {
-      "start": 415.311,
-      "end": 415.311
+      "start": 413.857,
+      "end": 413.857
     }
   ],
-  "duration": 422.661224
+  "duration": 421.198367
 }

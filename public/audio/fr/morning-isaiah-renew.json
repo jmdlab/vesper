@@ -8,30 +8,30 @@
     "[long pause]",
     "[long pause]",
     "[long pause]",
-    "Breathe in through your nose for four.",
-    "Hold gently for four.",
-    "Exhale slowly through your mouth for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "One more. In for four.",
-    "Hold for four.",
-    "Out for four.",
+    "Inspirez par le nez, quatre temps.",
+    "Retenez doucement sur quatre.",
+    "Expirez par la bouche, quatre temps.",
+    "Encore. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Une dernière fois. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
     "Une fois de plus. Remplissez votre ventre... et relâchez. Sentez votre corps se poser avec l'expiration.",
     "[long pause]",
     "[long pause]",
@@ -88,14 +88,31 @@
     "[long pause]",
     "Trois respirations profondes maintenant. Chacune est un acte de réception. Pas de performance. De réception.",
     "[long pause]",
-    "Inspirez... la force pour les fatigués... retenez un instant au sommet... et relâchez ce qui pesait sur vous.",
     "[long pause]",
-    "[long pause]",
-    "[long pause]",
-    "Inspirez... la puissance pour les faibles... retenez... et lâchez la pression de tout faire par vous-même.",
-    "[long pause]",
-    "[long pause]",
-    "[long pause]",
+    "Inspirez par le nez, quatre temps.",
+    "Retenez doucement sur quatre.",
+    "Expirez par la bouche, quatre temps.",
+    "Encore. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Une dernière fois. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
     "Une dernière. Inspirez... le renouvellement... retenez... et expirez complètement.",
     "[long pause]",
     "[long pause]",
@@ -120,448 +137,516 @@
     },
     {
       "start": 0.198,
-      "end": 0.794
+      "end": 0.874
     },
     {
-      "start": 0.794,
-      "end": 2.456
+      "start": 2.954,
+      "end": 3.608
     },
     {
-      "start": 2.456,
-      "end": 17.26
+      "start": 3.608,
+      "end": 19.005
     },
     {
-      "start": 17.26,
-      "end": 17.26
+      "start": 19.005,
+      "end": 20.559
     },
     {
-      "start": 17.26,
-      "end": 17.396
+      "start": 20.559,
+      "end": 20.559
     },
     {
-      "start": 17.396,
-      "end": 17.396
+      "start": 20.559,
+      "end": 20.705
     },
     {
-      "start": 17.396,
-      "end": 21.861
+      "start": 20.705,
+      "end": 20.705
     },
     {
-      "start": 21.812,
-      "end": 24.812
+      "start": 19.775,
+      "end": 22.775
     },
     {
-      "start": 25.312,
-      "end": 28.312
+      "start": 23.275,
+      "end": 26.275
     },
     {
-      "start": 28.812,
-      "end": 31.812
+      "start": 26.775,
+      "end": 29.775
     },
     {
-      "start": 33.812,
-      "end": 36.812
+      "start": 31.775,
+      "end": 34.775
     },
     {
-      "start": 37.312,
-      "end": 40.312
+      "start": 35.275,
+      "end": 38.275
     },
     {
-      "start": 40.812,
-      "end": 43.812
+      "start": 38.775,
+      "end": 41.775
     },
     {
-      "start": 45.812,
-      "end": 48.812
+      "start": 43.775,
+      "end": 46.775
     },
     {
-      "start": 49.312,
-      "end": 52.312
+      "start": 47.275,
+      "end": 50.275
     },
     {
-      "start": 52.812,
-      "end": 55.812
+      "start": 50.775,
+      "end": 53.775
     },
     {
-      "start": 57.812,
-      "end": 60.812
+      "start": 55.775,
+      "end": 58.775
     },
     {
-      "start": 61.312,
-      "end": 64.312
+      "start": 59.275,
+      "end": 62.275
     },
     {
-      "start": 64.812,
-      "end": 67.812
+      "start": 62.775,
+      "end": 65.775
     },
     {
-      "start": 69.812,
-      "end": 72.812
+      "start": 67.775,
+      "end": 70.775
     },
     {
-      "start": 73.312,
-      "end": 76.312
+      "start": 71.275,
+      "end": 74.275
     },
     {
-      "start": 76.812,
-      "end": 79.812
+      "start": 74.775,
+      "end": 77.775
     },
     {
-      "start": 81.812,
-      "end": 84.812
+      "start": 79.775,
+      "end": 82.775
     },
     {
-      "start": 85.312,
-      "end": 88.312
+      "start": 83.275,
+      "end": 86.275
     },
     {
-      "start": 88.812,
-      "end": 91.812
+      "start": 86.775,
+      "end": 89.775
     },
     {
-      "start": 93.812,
-      "end": 96.812
+      "start": 91.775,
+      "end": 94.775
     },
     {
-      "start": 97.312,
-      "end": 100.312
+      "start": 95.275,
+      "end": 98.275
     },
     {
-      "start": 100.812,
-      "end": 103.812
+      "start": 98.775,
+      "end": 101.775
     },
     {
-      "start": 105.812,
-      "end": 108.812
+      "start": 103.775,
+      "end": 106.775
     },
     {
-      "start": 109.312,
-      "end": 112.312
+      "start": 107.275,
+      "end": 110.275
     },
     {
-      "start": 112.812,
-      "end": 115.812
+      "start": 110.775,
+      "end": 113.775
     },
     {
-      "start": 115.815,
-      "end": 115.815
+      "start": 113.773,
+      "end": 113.773
     },
     {
-      "start": 115.815,
-      "end": 116.557
+      "start": 113.773,
+      "end": 113.821
     },
     {
-      "start": 116.557,
-      "end": 116.557
+      "start": 113.821,
+      "end": 113.821
     },
     {
-      "start": 116.557,
-      "end": 117.11
+      "start": 113.821,
+      "end": 113.869
     },
     {
-      "start": 117.11,
-      "end": 117.11
+      "start": 113.869,
+      "end": 114.594
     },
     {
-      "start": 117.11,
-      "end": 117.35
+      "start": 114.594,
+      "end": 114.594
     },
     {
-      "start": 117.35,
-      "end": 117.35
+      "start": 114.594,
+      "end": 114.594
     },
     {
-      "start": 117.35,
-      "end": 117.47
+      "start": 114.594,
+      "end": 114.594
     },
     {
-      "start": 117.47,
-      "end": 118.06
+      "start": 114.594,
+      "end": 123.141
     },
     {
-      "start": 118.06,
-      "end": 118.06
+      "start": 123.141,
+      "end": 125.613
     },
     {
-      "start": 118.06,
-      "end": 118.06
+      "start": 125.613,
+      "end": 128.168
     },
     {
-      "start": 118.06,
-      "end": 118.06
+      "start": 128.168,
+      "end": 129.196
     },
     {
-      "start": 118.06,
-      "end": 122.691
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 122.691,
-      "end": 127.709
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 129.147,
-      "end": 132.586
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 132.586,
-      "end": 134.364
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 134.364,
-      "end": 134.492
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 134.492,
-      "end": 134.82
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 134.82,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 132.314
     },
     {
-      "start": 137.772,
-      "end": 137.772
+      "start": 132.314,
+      "end": 134.707
     },
     {
-      "start": 137.772,
-      "end": 139.092
+      "start": 134.707,
+      "end": 134.707
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 134.707,
+      "end": 136.295
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 136.295,
+      "end": 136.295
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 136.295,
+      "end": 137.101
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 137.101,
+      "end": 144.066
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.066,
+      "end": 144.066
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.066,
+      "end": 144.066
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.066,
+      "end": 144.066
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.066,
+      "end": 144.608
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.092,
-      "end": 139.092
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.092,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 139.931
+      "start": 144.608,
+      "end": 144.608
     },
     {
-      "start": 139.931,
-      "end": 150.219
+      "start": 144.608,
+      "end": 156.493
     },
     {
-      "start": 150.219,
-      "end": 155.804
+      "start": 156.493,
+      "end": 158.109
     },
     {
-      "start": 158.282,
-      "end": 173.138
+      "start": 158.109,
+      "end": 159.364
     },
     {
-      "start": 173.138,
-      "end": 415.407
+      "start": 161.841,
+      "end": 434.296
     },
     {
-      "start": 415.407,
-      "end": 418.57
+      "start": 434.296,
+      "end": 434.296
     },
     {
-      "start": 418.57,
-      "end": 418.619
+      "start": 434.296,
+      "end": 437.796
     },
     {
-      "start": 418.619,
-      "end": 418.665
+      "start": 437.796,
+      "end": 438.846
     },
     {
-      "start": 418.665,
-      "end": 428.001
+      "start": 438.846,
+      "end": 438.846
     },
     {
-      "start": 428.001,
-      "end": 428.001
+      "start": 438.846,
+      "end": 439.403
     },
     {
-      "start": 428.001,
-      "end": 428.001
+      "start": 439.403,
+      "end": 439.403
     },
     {
-      "start": 428.001,
-      "end": 428.265
+      "start": 439.403,
+      "end": 439.403
     },
     {
-      "start": 428.265,
-      "end": 428.265
+      "start": 438.454,
+      "end": 441.454
     },
     {
-      "start": 428.265,
-      "end": 428.265
+      "start": 441.954,
+      "end": 444.954
     },
     {
-      "start": 428.265,
-      "end": 430.629
+      "start": 445.454,
+      "end": 448.454
     },
     {
-      "start": 430.629,
-      "end": 430.629
+      "start": 450.454,
+      "end": 453.454
     },
     {
-      "start": 430.629,
-      "end": 430.629
+      "start": 453.954,
+      "end": 456.954
     },
     {
-      "start": 430.629,
-      "end": 430.629
+      "start": 457.454,
+      "end": 460.454
     },
     {
-      "start": 430.629,
-      "end": 433.026
+      "start": 462.454,
+      "end": 465.454
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 465.954,
+      "end": 468.954
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 469.454,
+      "end": 472.454
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 474.454,
+      "end": 477.454
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 477.954,
+      "end": 480.954
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 481.454,
+      "end": 484.454
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 486.454,
+      "end": 489.454
     },
     {
-      "start": 433.026,
-      "end": 433.026
+      "start": 489.954,
+      "end": 492.954
     },
     {
-      "start": 433.026,
-      "end": 437.097
+      "start": 493.454,
+      "end": 496.454
     },
     {
-      "start": 437.097,
-      "end": 441.611
+      "start": 498.454,
+      "end": 501.454
     },
     {
-      "start": 441.611,
-      "end": 442.347
+      "start": 501.954,
+      "end": 504.954
     },
     {
-      "start": 442.347,
-      "end": 442.523
+      "start": 505.454,
+      "end": 508.454
     },
     {
-      "start": 442.523,
-      "end": 446.753
+      "start": 510.454,
+      "end": 513.454
     },
     {
-      "start": 446.753,
-      "end": 446.753
+      "start": 513.954,
+      "end": 516.954
     },
     {
-      "start": 446.753,
-      "end": 450.742
+      "start": 517.454,
+      "end": 520.454
     },
     {
-      "start": 450.742,
-      "end": 458.245
+      "start": 522.454,
+      "end": 525.454
     },
     {
-      "start": 458.245,
-      "end": 458.245
+      "start": 525.954,
+      "end": 528.954
+    },
+    {
+      "start": 529.454,
+      "end": 532.454
+    },
+    {
+      "start": 532.47,
+      "end": 532.47
+    },
+    {
+      "start": 532.47,
+      "end": 532.47
+    },
+    {
+      "start": 532.47,
+      "end": 532.47
+    },
+    {
+      "start": 532.47,
+      "end": 537.25
+    },
+    {
+      "start": 537.25,
+      "end": 537.25
+    },
+    {
+      "start": 537.25,
+      "end": 538.898
+    },
+    {
+      "start": 538.898,
+      "end": 538.898
+    },
+    {
+      "start": 538.898,
+      "end": 538.898
+    },
+    {
+      "start": 538.898,
+      "end": 539.136
+    },
+    {
+      "start": 539.136,
+      "end": 539.136
+    },
+    {
+      "start": 539.136,
+      "end": 539.794
+    },
+    {
+      "start": 539.794,
+      "end": 539.794
+    },
+    {
+      "start": 539.794,
+      "end": 540.07
+    },
+    {
+      "start": 540.07,
+      "end": 540.07
+    },
+    {
+      "start": 540.07,
+      "end": 548.425
+    },
+    {
+      "start": 548.425,
+      "end": 548.425
     }
   ],
-  "duration": 531.591837
+  "duration": 631.849796
 }

@@ -6,18 +6,18 @@
     "Si votre esprit s'emballe déjà... c'est normal. Nous allons le ralentir. Pas en le combattant. En respirant en dessous.",
     "[long pause]",
     "[long pause]",
-    "Breathe in through your nose for four.",
-    "Hold gently for four.",
-    "Exhale slowly through your mouth for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "Again. In for four.",
-    "Hold for four.",
-    "Out for four.",
-    "One more. In for four.",
-    "Hold for four.",
-    "Out for four.",
+    "Inspirez par le nez, quatre temps.",
+    "Retenez doucement sur quatre.",
+    "Expirez par la bouche, quatre temps.",
+    "Encore. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
+    "Une dernière fois. Inspirez sur quatre.",
+    "Retenez sur quatre.",
+    "Expirez sur quatre.",
     "Cette longue expiration active votre nerf vague... le plus long nerf de votre corps, qui va du tronc cérébral jusqu'aux intestins. Il dit à votre système nerveux : tu es en sécurité. Pas une pensée. Un signal. Votre corps peut calmer votre esprit quand votre esprit refuse de se calmer seul.",
     "[long pause]",
     "[long pause]",
@@ -117,52 +117,52 @@
       "end": 13.286
     },
     {
-      "start": 23.954,
-      "end": 27.954
+      "start": 12.565,
+      "end": 16.565
     },
     {
-      "start": 28.454,
-      "end": 35.454
+      "start": 17.065,
+      "end": 24.065
     },
     {
-      "start": 35.954,
-      "end": 43.954
+      "start": 24.565,
+      "end": 32.565
     },
     {
-      "start": 45.954,
-      "end": 49.954
+      "start": 34.565,
+      "end": 38.565
     },
     {
-      "start": 50.454,
-      "end": 57.454
+      "start": 39.065,
+      "end": 46.065
     },
     {
-      "start": 57.954,
-      "end": 65.954
+      "start": 46.565,
+      "end": 54.565
     },
     {
-      "start": 67.954,
-      "end": 71.954
+      "start": 56.565,
+      "end": 60.565
     },
     {
-      "start": 72.454,
-      "end": 79.454
+      "start": 61.065,
+      "end": 68.065
     },
     {
-      "start": 79.954,
-      "end": 87.954
+      "start": 68.565,
+      "end": 76.565
     },
     {
-      "start": 89.954,
-      "end": 93.954
+      "start": 78.565,
+      "end": 82.565
     },
     {
-      "start": 94.454,
-      "end": 101.454
+      "start": 83.065,
+      "end": 90.065
     },
     {
-      "start": 101.954,
-      "end": 109.954
+      "start": 90.565,
+      "end": 98.565
     },
     {
       "start": 98.572,
@@ -453,5 +453,5 @@
       "end": 451.927
     }
   ],
-  "duration": 551.993469
+  "duration": 462.628571
 }

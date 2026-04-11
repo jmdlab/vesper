@@ -97,8 +97,39 @@ export function stripBreathingLines(raw: string): string {
   // Counting pattern: lines like "In... two... three... four" — must have ellipsis-separated numbers
   // First number must be one/two (ascending start) to exclude PMR countdowns (five... four... three...)
   const countingPattern = /\.\.\.\s*(?:one|two|un|deux)\b.*\.\.\.\s*(?:two|three|four|five|six|seven|eight|deux|trois|quatre|cinq|six|sept|huit)\b/i
-  // Breathing instruction: short directive lines (< 60 chars) that are phase cues
-  const breathingInstrPattern = /^(?:Breathe\s+in\s+(?:through|slowly|for)|In\s+for\s\w+\.$|Out\s+for\s\w+\.$|Hold\s+(?:for\s\w+\.|gently\s+for)|Again\.\s*In\s+for|One\s+more\.\s*In\s|Exhale\s+slowly\s+through|And\s+hold\s+for|Inspir\w*\s+(?:par|sur|lentement)|Expir\w*\s+(?:par|sur|lentement)|Retene\w*\s+(?:sur|doucement))/i
+
+  // Breathing instruction: short directive lines that are phase cues.
+  //
+  // EN patterns (all include the phase verb so prayer refrains like
+  // "Again. I am yours." never match):
+  //   Breathe in…, In for four, Out for four, Hold (for|gently for)…,
+  //   Again. In for…, One more. In for…, Exhale slowly…, And hold for…
+  //
+  // FR patterns (same principle — lead-in is optional but a phase verb is
+  // REQUIRED after it, so non-breathing lines like
+  // "Encore. « Je suis à toi. »" and "Une dernière fois. Pas plus fort."
+  // are not captured). Accepted phase verbs: Inspir…, Expir…, Reten…
+  // Accepted separators between verb and its argument: whitespace OR ellipsis
+  // (so "Inspirez..." with trailing dots also matches).
+  // Alternative #1: EN with lead-in. "Again. " or "One more. " followed by any
+  // EN phase verb INCLUDING bare "In" (the context resolves the ambiguity;
+  // bare "In" alone is too loose for false-positives like "In this moment").
+  const enLeadIn  = '(?:Again|One\\s+more)\\.\\s+(?:Breathe\\s+in\\b|Breathe\\s+out\\b|Inhale\\b|Exhale\\b|Hold\\b|In\\b|Out\\b)'
+
+  // Alternative #2: EN direct (no lead-in). Bare "In" NOT allowed; "In for X"
+  // and "Out for X" only, Hold must be followed by "for" or "gently".
+  const enDirect  = '(?:Breathe\\s+in\\b|Breathe\\s+out\\b|Inhale\\b|Exhale\\b|Hold\\s+(?:for|gently)\\b|And\\s+hold\\b|In\\s+for\\s+\\w+|Out\\s+for\\s+\\w+)'
+
+  // Alternative #3: FR. Optional lead-in ("Et ", "Encore. ", "Une dernière
+  // fois. ") followed by a strict imperative phase verb. We require the
+  // imperative form (Inspirez/Expirez/Retenez) to avoid catching prose like
+  // "L'inspiration vient de Dieu" or "Inspiré par le Seigneur".
+  const frPattern = '(?:(?:Et|Encore\\.|Une\\s+derni[èe]re\\s+fois\\.)\\s+)?(?:Inspirez|Expirez|Retenez)\\b'
+
+  const breathingInstrPattern = new RegExp(
+    `^(?:${enLeadIn}|${enDirect}|${frPattern})`,
+    'i',
+  )
   const pausePattern = /^\[\d+s?\s+(?:pause|silence)/i
 
   // Find ALL breathing sections
@@ -162,9 +193,13 @@ export function stripBreathingLines(raw: string): string {
  * 6. Adds sentence-level pauses after periods, questions, and ellipses
  * 7. Converts paragraph breaks to chained pause tags
  */
-export function prepareScript(raw: string, category: string): string {
-  // Strip breathing counting lines first
-  const stripped = stripBreathingLines(raw)
+export function prepareScript(raw: string, category: string, hasBreathing = true): string {
+  // Strip breathing counting lines ONLY if the meditation has a breathing
+  // config. When breathing is null, the narrator speaks the breathing
+  // instructions naturally — stripping them would emit [BREATHING_SECTION]
+  // markers that insert-breathing.ts won't process (since there's no config),
+  // and the markers would ship as literal TTS output ("breathing section").
+  const stripped = hasBreathing ? stripBreathingLines(raw) : raw
   const pauseMult = getPauseMultiplier(category)
   const lines = stripped.split('\n')
   const output: string[] = []

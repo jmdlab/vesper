@@ -546,13 +546,25 @@ def assemble_from_segments(
 
     intro_dur = get_duration(intro_mp3)
 
-    # Build breathing alignment lines
-    instr_labels = {
-        "inhale": ["Breathe in...", "Again. In...", "In...", "One more. In..."],
-        "hold_in": ["Hold gently...", "Hold..."],
-        "exhale": ["Exhale slowly...", "Out slowly...", "Out..."],
-        "hold_out": ["And hold...", "Hold..."],
+    # Build breathing alignment lines. Labels MUST match the language of the
+    # voice clips that actually play (katherine for en/en-v2, koraly for fr).
+    # Indices are [first, again, middle, last] matching round selection below.
+    INSTR_LABELS_BY_LANG = {
+        "en": {
+            "inhale":   ["Breathe in through your nose for four.", "Again. In for four.",    "In for four.",    "One more. In for four."],
+            "hold_in":  ["Hold gently for four.",                    "Hold for four.",           "Hold for four.",  "Hold for four."],
+            "exhale":   ["Exhale slowly through your mouth.",        "Out for four.",            "Out for four.",   "Out for four."],
+            "hold_out": ["And hold for four.",                       "Hold for four.",           "Hold for four.",  "Hold for four."],
+        },
+        "fr": {
+            "inhale":   ["Inspirez par le nez, quatre temps.",      "Encore. Inspirez sur quatre.", "Inspirez sur quatre.", "Une dernière fois. Inspirez sur quatre."],
+            "hold_in":  ["Retenez doucement sur quatre.",           "Retenez sur quatre.",           "Retenez sur quatre.",  "Retenez sur quatre."],
+            "exhale":   ["Expirez par la bouche, quatre temps.",    "Expirez sur quatre.",           "Expirez sur quatre.",  "Expirez sur quatre."],
+            "hold_out": ["Et retenez sur quatre.",                  "Retenez sur quatre.",           "Retenez sur quatre.",  "Retenez sur quatre."],
+        },
     }
+    INSTR_LABELS_BY_LANG["en-v2"] = INSTR_LABELS_BY_LANG["en"]
+    instr_labels = INSTR_LABELS_BY_LANG.get(lang, INSTR_LABELS_BY_LANG["en"])
 
     breathing_lines: list[str] = []
     breathing_ts: list[dict] = []
@@ -561,12 +573,18 @@ def assemble_from_segments(
     for round_num in range(1, rounds + 1):
         for pi, (pt, dur) in enumerate(phases_per_round):
             labels = instr_labels.get(pt, ["..."])
+            # Index mirrors get_instruction_clip variant selection:
+            #   [0]=first (round 1), [1]=again (round 2 inhale),
+            #   [2]=middle (rounds 3..n-1), [3]=last (final round inhale).
+            # Order: "last" BEFORE "again" so rounds==2 final round picks "last".
             if round_num == 1:
                 label = labels[0]
             elif round_num == rounds and pt == "inhale":
-                label = labels[-1] if len(labels) > 3 else labels[min(2, len(labels) - 1)]
-            else:
+                label = labels[min(3, len(labels) - 1)]
+            elif round_num == 2 and pt == "inhale":
                 label = labels[min(1, len(labels) - 1)]
+            else:
+                label = labels[min(2, len(labels) - 1)]
 
             phase_end = cursor + float(dur)
             breathing_lines.append(label)

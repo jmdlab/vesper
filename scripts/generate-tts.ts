@@ -147,12 +147,15 @@ async function generateForMeditation(
     const outDir = join(baseOutDir, l)
     const outPath = join(outDir, `${slug}.mp3`)
 
-    if (existsSync(outPath) && !options.force) {
+    // Dry-run always computes/previews, even if audio exists — otherwise
+    // the pipeline has no way to preview billable chars for a re-generation.
+    if (existsSync(outPath) && !options.force && !options.dryRun) {
       console.log(`  Skipping ${slug} (${l}) — audio already exists (use --force to regenerate)`)
       continue
     }
 
-    const prepared = prepareScript(rawScript, meditation.category)
+    const hasBreathing = (meditation as unknown as { breathing: unknown }).breathing != null
+    const prepared = prepareScript(rawScript, meditation.category, hasBreathing)
     // Replace [BREATHING_SECTION] with a short silence marker for TTS.
     // The actual breathing audio gets inserted in post-processing.
     const ttsReady = prepared.replaceAll(
@@ -276,6 +279,14 @@ async function generateForMeditation(
     // Write audio and fix Xing header for correct mobile duration
     const combined = Buffer.concat(buffers)
     writeFileSync(outPath, combined)
+    // Invalidate any stale insert-breathing snapshot so the next run re-creates
+    // it from this fresh TTS output. Without this, editing scriptEn/scriptFr
+    // and re-running the pipeline would silently ship the pre-edit audio.
+    const staleMp3 = outPath.replace('.mp3', '.tts-original.mp3')
+    const staleJson = outPath.replace('.mp3', '.tts-original.json')
+    for (const p of [staleMp3, staleJson]) {
+      if (existsSync(p)) { try { unlinkSync(p) } catch { /* ignore */ } }
+    }
     if (buffers.length > 1) {
       try {
         execFileSync('python3', [join(PROJECT_ROOT, 'scripts', 'fix-mp3-headers.py'), outDir])
