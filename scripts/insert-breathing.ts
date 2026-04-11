@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, cpSync
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execFileSync, spawnSync } from 'child_process'
+import { validateMeditation } from './lib/validate-meditation.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -63,7 +64,7 @@ function insertBreathing(slug: string, lang: string, dryRun: boolean): boolean {
     console.error(`    Meditation not found: ${slug}`)
     return false
   }
-  const med: MeditationJSON = JSON.parse(readFileSync(medPath, 'utf-8'))
+  const med: MeditationJSON = validateMeditation(slug, JSON.parse(readFileSync(medPath, 'utf-8'))) as unknown as MeditationJSON
 
   if (!med.breathing) {
     console.log(`    No breathing pattern — skipping`)
@@ -294,10 +295,19 @@ function insertBreathingAtMarker(
   // Write final to audio-storage (overwrite the TTS-only version)
   cpSync(finalMp3, mp3Path)
 
-  // Build new alignment
+  // Build new alignment.
+  // Seam math: post-marker timestamps are shifted by `delta`. The correct
+  // formula uses the measured durations of the actual concatenated pieces,
+  // NOT the ffmpeg-cut times (which snap to frame boundaries and include the
+  // 0.1s silencedetect pad, causing 0.3-4s backward jumps at seams):
+  //   pre ends at:          preDur
+  //   breathing starts at:  preDur, ends at: preDur + breathingDur
+  //   post starts at:       preDur + breathingDur
+  //   original post start:  resumeTime
+  //   shift:                delta = (preDur + breathingDur) - resumeTime
   const preDur = getDuration(preMp3)
   const postDur = getDuration(postMp3)
-  const delta = breathingDur - (resumeTime - insertTime)
+  const delta = (preDur + breathingDur) - resumeTime
 
   const newLines: string[] = []
   const newTs: Array<{ start: number; end: number }> = []
@@ -394,14 +404,9 @@ function insertBreathingAtMarker(
   writeFileSync(alignPath, JSON.stringify(newAlignment, null, 2) + '\n')
   console.log(`    Alignment: ${newLines.length} lines`)
 
-  // Copy to public/
-  const pubMp3 = join(PROJECT_ROOT, 'public', 'audio', lang, `${slug}.mp3`)
-  const pubJson = join(PROJECT_ROOT, 'public', 'audio', lang, `${slug}.json`)
-  if (existsSync(dirname(pubMp3))) {
-    cpSync(mp3Path, pubMp3)
-    cpSync(alignPath, pubJson)
-    console.log(`    Copied to public/audio/${lang}/`)
-  }
+  // NOTE: public/audio copy is handled by pipeline.ts `ship` final step, not
+  // here — avoids two-sources-of-truth drift between audio-storage/ and
+  // public/audio/. See generate-tts.ts same removal.
 
   // Cleanup
   try { rmSync(tmpDir, { recursive: true }) } catch { /* non-critical */ }

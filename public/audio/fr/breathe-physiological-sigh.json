@@ -1,1 +1,212 @@
-{"lines":["[long pause]","Le soupir physiologique. Une étude de Stanford en 2023 a montré que c'est la technique de respiration en temps réel la plus efficace pour réduire le stress — plus efficace que la respiration en carré, la respiration méditative ou la pleine conscience seule. Ça fonctionne en gonflant complètement les alvéoles pulmonaires sur la double inspiration, puis en évacuant l'excès de CO2 sur la longue expiration, ce qui active directement ton système nerveux parasympathique.","[long pause]","Deux inspirations rapides par le nez. Une longue expiration par la bouche. Six cycles. Je te guide.","[long pause]","[long pause]","[long pause]","Courte inspiration par le nez... et une seconde inspiration plus profonde...","Maintenant une longue expiration lente par la bouche... laisse tout sortir.","[long pause]","[long pause]","[long pause]","Courte inspiration... seconde inspiration plus profonde...","Longue expiration lente... vide complètement tes poumons.","[long pause]","[long pause]","[long pause]","Courte inspiration... inspiration plus profonde par-dessus...","[long pause]","[BREATHING_SECTION]","[long pause]","Courte inspiration... seconde inspiration profonde...","Et relâche... longue expiration par la bouche.","[long pause]","[long pause]","[long pause]","Courte inspiration... inspiration profonde...","Expiration lente... laisse tout partir.","[long pause]","[long pause]","[long pause]","Dernier cycle.","[long pause]","Courte inspiration... seconde inspiration plus profonde...","Longue expiration lente... jusqu'au bout.","[long pause]","[long pause]","[long pause]","Six cycles terminés. Respire normalement. Observe le changement.","[long pause]"],"timestamps":[{"start":0.032,"end":0.136},{"start":0.136,"end":30.3},{"start":30.3,"end":33.176},{"start":33.176,"end":40.234},{"start":40.234,"end":40.234},{"start":40.234,"end":40.35},{"start":40.35,"end":45.304},{"start":45.304,"end":45.304},{"start":45.304,"end":45.304},{"start":45.304,"end":45.638},{"start":45.638,"end":45.638},{"start":45.638,"end":45.638},{"start":45.638,"end":46.578},{"start":46.578,"end":48.976},{"start":48.976,"end":48.976},{"start":48.976,"end":48.976},{"start":48.976,"end":48.976},{"start":48.976,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":51.924},{"start":51.924,"end":55.364},{"start":55.364,"end":55.364},{"start":55.364,"end":55.364},{"start":55.364,"end":57.521},{"start":57.521,"end":57.521},{"start":57.521,"end":57.521},{"start":57.521,"end":57.521},{"start":57.521,"end":57.521},{"start":57.521,"end":57.521},{"start":57.521,"end":58.721},{"start":58.721,"end":60.437},{"start":60.437,"end":60.437},{"start":60.437,"end":60.437},{"start":60.437,"end":60.643},{"start":60.643,"end":60.643},{"start":60.643,"end":71.006}],"duration":219.794286}
+{
+  "lines": [
+    "[long pause]",
+    "Le soupir physiologique. Une étude de Stanford en 2023 a montré que c'est la technique de respiration en temps réel la plus efficace pour réduire le stress — plus efficace que la respiration en carré, la respiration méditative ou la pleine conscience seule. Ça fonctionne en gonflant complètement les alvéoles pulmonaires sur la double inspiration, puis en évacuant l'excès de CO2 sur la longue expiration, ce qui active directement ton système nerveux parasympathique.",
+    "[long pause]",
+    "Deux inspirations rapides par le nez. Une longue expiration par la bouche. Six cycles. Je te guide.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Courte inspiration par le nez... et une seconde inspiration plus profonde...",
+    "Maintenant une longue expiration lente par la bouche... laisse tout sortir.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Courte inspiration... seconde inspiration plus profonde...",
+    "Longue expiration lente... vide complètement tes poumons.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Courte inspiration... inspiration plus profonde par-dessus...",
+    "Expire lentement... jusqu'au bout.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Courte inspiration... seconde inspiration profonde...",
+    "Et relâche... longue expiration par la bouche.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Courte inspiration... inspiration profonde...",
+    "Expiration lente... laisse tout partir.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Dernier cycle.",
+    "[long pause]",
+    "Courte inspiration... seconde inspiration plus profonde...",
+    "Longue expiration lente... jusqu'au bout.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Six cycles terminés. Respire normalement. Observe le changement.",
+    "[long pause]"
+  ],
+  "timestamps": [
+    {
+      "start": 0.08,
+      "end": 0.344
+    },
+    {
+      "start": 0.344,
+      "end": 31.469
+    },
+    {
+      "start": 31.469,
+      "end": 31.893
+    },
+    {
+      "start": 31.893,
+      "end": 39.248
+    },
+    {
+      "start": 39.248,
+      "end": 39.248
+    },
+    {
+      "start": 39.248,
+      "end": 41.084
+    },
+    {
+      "start": 41.084,
+      "end": 45.387
+    },
+    {
+      "start": 45.387,
+      "end": 45.387
+    },
+    {
+      "start": 45.387,
+      "end": 45.387
+    },
+    {
+      "start": 45.387,
+      "end": 45.524
+    },
+    {
+      "start": 45.524,
+      "end": 45.524
+    },
+    {
+      "start": 45.524,
+      "end": 45.524
+    },
+    {
+      "start": 45.524,
+      "end": 46.991
+    },
+    {
+      "start": 46.991,
+      "end": 46.991
+    },
+    {
+      "start": 46.991,
+      "end": 46.991
+    },
+    {
+      "start": 46.991,
+      "end": 46.991
+    },
+    {
+      "start": 46.991,
+      "end": 46.991
+    },
+    {
+      "start": 46.991,
+      "end": 53.699
+    },
+    {
+      "start": 53.699,
+      "end": 53.699
+    },
+    {
+      "start": 53.699,
+      "end": 53.699
+    },
+    {
+      "start": 53.699,
+      "end": 53.699
+    },
+    {
+      "start": 53.699,
+      "end": 54.629
+    },
+    {
+      "start": 54.629,
+      "end": 54.629
+    },
+    {
+      "start": 54.629,
+      "end": 55.614
+    },
+    {
+      "start": 55.614,
+      "end": 55.614
+    },
+    {
+      "start": 55.614,
+      "end": 55.614
+    },
+    {
+      "start": 55.614,
+      "end": 55.614
+    },
+    {
+      "start": 55.614,
+      "end": 57.621
+    },
+    {
+      "start": 57.621,
+      "end": 59.126
+    },
+    {
+      "start": 59.126,
+      "end": 64.226
+    },
+    {
+      "start": 64.226,
+      "end": 64.226
+    },
+    {
+      "start": 64.226,
+      "end": 64.382
+    },
+    {
+      "start": 64.382,
+      "end": 64.382
+    },
+    {
+      "start": 64.382,
+      "end": 64.622
+    },
+    {
+      "start": 64.622,
+      "end": 69.422
+    },
+    {
+      "start": 69.422,
+      "end": 73.1
+    },
+    {
+      "start": 73.1,
+      "end": 73.1
+    },
+    {
+      "start": 73.1,
+      "end": 73.1
+    },
+    {
+      "start": 73.1,
+      "end": 73.1
+    },
+    {
+      "start": 73.1,
+      "end": 73.1
+    },
+    {
+      "start": 73.1,
+      "end": 83.24
+    }
+  ],
+  "duration": 140.120816
+}

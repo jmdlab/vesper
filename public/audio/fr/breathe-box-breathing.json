@@ -1,1 +1,272 @@
-{"lines":["[long pause]","Respiration en carré. Quatre côtés égaux. Inspire, retiens, expire, retiens — quatre temps chacun. Utilisée par les forces spéciales et les urgentistes pour se recentrer sous pression. Ça fonctionne parce que les phases respiratoires de durée égale stabilisent la variabilité de ton rythme cardiaque et activent ton système nerveux parasympathique.","[long pause]","Installe-toi confortablement. On fait six cycles. Je compte pour toi.","[long pause]","[long pause]","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Dernier cycle.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Six cycles terminés. Respire normalement. Observe ce que tu ressens.","[long pause]"],"timestamps":[{"start":0.08,"end":0.275},{"start":0.275,"end":25.867},{"start":25.867,"end":29.819},{"start":29.819,"end":34.134},{"start":34.134,"end":34.134},{"start":34.134,"end":34.25},{"start":34.25,"end":34.25},{"start":34.25,"end":34.628},{"start":34.628,"end":38.086},{"start":38.086,"end":38.926},{"start":38.926,"end":38.926},{"start":38.926,"end":39.886},{"start":39.886,"end":39.886},{"start":39.886,"end":43.839},{"start":43.839,"end":45.115},{"start":55.875,"end":58.935},{"start":58.935,"end":59.061}],"duration":59.245714}
+{
+  "lines": [
+    "[long pause]",
+    "Respiration en carré. Quatre côtés égaux. Inspire, retiens, expire, retiens — quatre temps chacun. Utilisée par les forces spéciales et les urgentistes pour se recentrer sous pression. Ça fonctionne parce que les phases respiratoires de durée égale stabilisent la variabilité de ton rythme cardiaque et activent ton système nerveux parasympathique.",
+    "[long pause]",
+    "Installe-toi confortablement. On fait six cycles. Je compte pour toi.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Dernier cycle.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Six cycles terminés. Respire normalement. Observe ce que tu ressens.",
+    "[long pause]"
+  ],
+  "timestamps": [
+    {
+      "start": 0.08,
+      "end": 0.206
+    },
+    {
+      "start": 0.206,
+      "end": 21.534
+    },
+    {
+      "start": 21.534,
+      "end": 23.98
+    },
+    {
+      "start": 23.98,
+      "end": 27.882
+    },
+    {
+      "start": 27.882,
+      "end": 27.882
+    },
+    {
+      "start": 27.882,
+      "end": 28.158
+    },
+    {
+      "start": 28.158,
+      "end": 32.486
+    },
+    {
+      "start": 32.486,
+      "end": 32.486
+    },
+    {
+      "start": 32.486,
+      "end": 32.486
+    },
+    {
+      "start": 32.486,
+      "end": 32.486
+    },
+    {
+      "start": 32.486,
+      "end": 32.486
+    },
+    {
+      "start": 32.486,
+      "end": 32.735
+    },
+    {
+      "start": 32.735,
+      "end": 32.735
+    },
+    {
+      "start": 32.735,
+      "end": 32.735
+    },
+    {
+      "start": 32.735,
+      "end": 38.099
+    },
+    {
+      "start": 38.099,
+      "end": 38.099
+    },
+    {
+      "start": 38.099,
+      "end": 38.099
+    },
+    {
+      "start": 38.099,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 42.953
+    },
+    {
+      "start": 42.953,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 48.452
+    },
+    {
+      "start": 48.452,
+      "end": 54.625
+    },
+    {
+      "start": 54.625,
+      "end": 54.625
+    },
+    {
+      "start": 54.625,
+      "end": 54.625
+    },
+    {
+      "start": 54.625,
+      "end": 58.443
+    },
+    {
+      "start": 58.443,
+      "end": 58.443
+    },
+    {
+      "start": 58.443,
+      "end": 58.639
+    },
+    {
+      "start": 58.639,
+      "end": 58.639
+    },
+    {
+      "start": 58.639,
+      "end": 58.639
+    },
+    {
+      "start": 58.639,
+      "end": 58.639
+    },
+    {
+      "start": 58.639,
+      "end": 58.639
+    },
+    {
+      "start": 58.639,
+      "end": 58.799
+    },
+    {
+      "start": 58.799,
+      "end": 58.799
+    },
+    {
+      "start": 58.799,
+      "end": 58.799
+    },
+    {
+      "start": 58.799,
+      "end": 58.799
+    },
+    {
+      "start": 58.799,
+      "end": 58.799
+    },
+    {
+      "start": 58.799,
+      "end": 58.823
+    },
+    {
+      "start": 58.823,
+      "end": 58.823
+    },
+    {
+      "start": 58.823,
+      "end": 63.543
+    },
+    {
+      "start": 63.543,
+      "end": 71.377
+    },
+    {
+      "start": 73.774,
+      "end": 80.325
+    },
+    {
+      "start": 80.325,
+      "end": 80.325
+    },
+    {
+      "start": 80.325,
+      "end": 80.325
+    },
+    {
+      "start": 80.325,
+      "end": 80.325
+    },
+    {
+      "start": 80.325,
+      "end": 85.757
+    }
+  ],
+  "duration": 202.919184
+}

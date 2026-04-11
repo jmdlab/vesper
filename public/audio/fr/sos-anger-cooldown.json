@@ -1,1 +1,402 @@
-{"lines":["[long pause]","Tu es en colère. Je ne vais pas te dire de ne pas l'être. La colère est une information. Elle te dit que quelque chose compte. Mais en ce moment, la colère inonde ton cerveau de cortisol, et ça désactive la partie de toi qui prend les bonnes décisions.","[long pause]","Alors on ne va pas agir. Pas encore. On va gagner du temps. Vingt minutes — c'est le temps qu'il faut au cortisol pour se dissiper. Cet exercice te fait traverser le pire.","[long pause]","[long pause]","[long pause]","Ta respiration d'abord. On va inspirer sur quatre temps et expirer sur huit. L'expiration longue active ton nerf vague — c'est la pédale de frein de ton système nerveux. Ça te sort physiquement du mode combat.","[long pause]","On y va.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Encore.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Continue.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Dernier cycle.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Bien. Maintenant, localise où la colère vit dans ton corps. Ne l'analyse pas. Trouve-la juste.","[long pause]","Vérifie ta mâchoire. Est-elle serrée ? Remarque-le. Ne force pas l'ouverture. Observe simplement.","[long pause]","[long pause]","[long pause]","Tes poings. Sont-ils crispés ? Observe juste.","[long pause]","[long pause]","[long pause]","Ta poitrine. Y a-t-il une pression ? De la chaleur ?","[long pause]","[long pause]","[long pause]","Ton ventre. Serré ? Noué ?","[long pause]","[long pause]","[long pause]","Là où tu l'as trouvée — dirige ta prochaine expiration vers cet endroit. Inspire... et expire vers ce point. Pas pour le faire disparaître. Juste pour lui donner de l'espace.","[long pause]","[long pause]","[long pause]","Une dernière fois. Inspire... et expire vers la tension.","[long pause]","[long pause]","[long pause]","Que chacun soit prompt à écouter. Lent à parler. Lent à se mettre en colère.","[long pause]","[long pause]","[long pause]","Ta colère est réelle. Ce que quelqu'un a fait — ou ce qui s'est passé — c'est réel. Mais tu choisis ce qui vient ensuite. Pas la colère. Toi.","[long pause]","Il y a une différence entre ressentir et suivre. En ce moment, tu as créé cet espace. Reste dedans.","[long pause]","[long pause]","[long pause]","Une dernière respiration. Inspire par le nez... longue expiration.","[long pause]","[long pause]","[long pause]","Tu gardes le contrôle. Pas parce que la colère a disparu. Parce que tu as choisi de ne pas la laisser conduire.","[long pause]"],"timestamps":[{"start":0.08,"end":0.144},{"start":0.144,"end":15.06},{"start":15.06,"end":18.244},{"start":18.244,"end":29.704},{"start":29.704,"end":29.704},{"start":29.704,"end":31.5},{"start":31.5,"end":33.689},{"start":33.689,"end":33.689},{"start":33.689,"end":33.967},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":36.681},{"start":36.681,"end":39.071},{"start":39.071,"end":39.071},{"start":39.071,"end":39.071},{"start":39.071,"end":39.071},{"start":39.071,"end":40.799},{"start":40.799,"end":40.799},{"start":40.799,"end":41.151},{"start":41.151,"end":41.151},{"start":41.151,"end":41.151},{"start":41.151,"end":41.151},{"start":41.151,"end":41.151},{"start":41.151,"end":41.151},{"start":41.151,"end":48.26},{"start":48.26,"end":50.989},{"start":50.989,"end":50.989},{"start":50.989,"end":51.05},{"start":51.05,"end":51.05},{"start":51.05,"end":52.726},{"start":52.726,"end":52.726},{"start":52.726,"end":54.142},{"start":54.142,"end":54.298},{"start":54.298,"end":54.615},{"start":54.615,"end":54.718},{"start":54.718,"end":61.212}],"duration":176.927347}
+{
+  "lines": [
+    "[long pause]",
+    "Tu es en colère. Je ne vais pas te dire de ne pas l'être. La colère est une information. Elle te dit que quelque chose compte. Mais en ce moment, la colère inonde ton cerveau de cortisol, et ça désactive la partie de toi qui prend les bonnes décisions.",
+    "[long pause]",
+    "Alors on ne va pas agir. Pas encore. On va gagner du temps. Vingt minutes — c'est le temps qu'il faut au cortisol pour se dissiper. Cet exercice te fait traverser le pire.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Ta respiration d'abord. On va inspirer sur quatre temps et expirer sur huit. L'expiration longue active ton nerf vague — c'est la pédale de frein de ton système nerveux. Ça te sort physiquement du mode combat.",
+    "[long pause]",
+    "On y va.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Maintenant expire, lentement... deux... trois... quatre... cinq... six... sept... huit.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Encore.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Expire... deux... trois... quatre... cinq... six... sept... huit.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Continue.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Expire... deux... trois... quatre... cinq... six... sept... huit.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Dernier cycle.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Expire... deux... trois... quatre... cinq... six... sept... huit.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Bien. Maintenant, localise où la colère vit dans ton corps. Ne l'analyse pas. Trouve-la juste.",
+    "[long pause]",
+    "Vérifie ta mâchoire. Est-elle serrée ? Remarque-le. Ne force pas l'ouverture. Observe simplement.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Tes poings. Sont-ils crispés ? Observe juste.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Ta poitrine. Y a-t-il une pression ? De la chaleur ?",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Ton ventre. Serré ? Noué ?",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Là où tu l'as trouvée — dirige ta prochaine expiration vers cet endroit. Inspire... et expire vers ce point. Pas pour le faire disparaître. Juste pour lui donner de l'espace.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Une dernière fois. Inspire... et expire vers la tension.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Que chacun soit prompt à écouter. Lent à parler. Lent à se mettre en colère.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Ta colère est réelle. Ce que quelqu'un a fait — ou ce qui s'est passé — c'est réel. Mais tu choisis ce qui vient ensuite. Pas la colère. Toi.",
+    "[long pause]",
+    "Il y a une différence entre ressentir et suivre. En ce moment, tu as créé cet espace. Reste dedans.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Une dernière respiration. Inspire par le nez... longue expiration.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Tu gardes le contrôle. Pas parce que la colère a disparu. Parce que tu as choisi de ne pas la laisser conduire.",
+    "[long pause]"
+  ],
+  "timestamps": [
+    {
+      "start": 0.032,
+      "end": 0.136
+    },
+    {
+      "start": 0.136,
+      "end": 16.82
+    },
+    {
+      "start": 16.82,
+      "end": 17.749
+    },
+    {
+      "start": 17.749,
+      "end": 28.379
+    },
+    {
+      "start": 28.379,
+      "end": 32.541
+    },
+    {
+      "start": 32.541,
+      "end": 32.571
+    },
+    {
+      "start": 32.571,
+      "end": 32.599
+    },
+    {
+      "start": 32.599,
+      "end": 46.501
+    },
+    {
+      "start": 46.501,
+      "end": 48.165
+    },
+    {
+      "start": 48.165,
+      "end": 48.576
+    },
+    {
+      "start": 48.576,
+      "end": 48.576
+    },
+    {
+      "start": 48.576,
+      "end": 48.576
+    },
+    {
+      "start": 48.576,
+      "end": 48.576
+    },
+    {
+      "start": 48.576,
+      "end": 50.03
+    },
+    {
+      "start": 50.03,
+      "end": 50.03
+    },
+    {
+      "start": 50.03,
+      "end": 50.03
+    },
+    {
+      "start": 50.03,
+      "end": 50.03
+    },
+    {
+      "start": 50.03,
+      "end": 50.03
+    },
+    {
+      "start": 50.03,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 55.601
+    },
+    {
+      "start": 55.601,
+      "end": 57.598
+    },
+    {
+      "start": 57.598,
+      "end": 70.378
+    },
+    {
+      "start": 70.378,
+      "end": 70.557
+    },
+    {
+      "start": 70.557,
+      "end": 70.557
+    },
+    {
+      "start": 70.557,
+      "end": 70.762
+    },
+    {
+      "start": 70.762,
+      "end": 70.762
+    },
+    {
+      "start": 70.762,
+      "end": 70.976
+    },
+    {
+      "start": 70.976,
+      "end": 70.976
+    },
+    {
+      "start": 70.976,
+      "end": 71.11
+    },
+    {
+      "start": 71.11,
+      "end": 72.584
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 76.5
+    },
+    {
+      "start": 76.5,
+      "end": 82.818
+    },
+    {
+      "start": 82.818,
+      "end": 82.818
+    },
+    {
+      "start": 82.818,
+      "end": 82.818
+    },
+    {
+      "start": 82.818,
+      "end": 82.818
+    },
+    {
+      "start": 82.818,
+      "end": 90.248
+    },
+    {
+      "start": 90.248,
+      "end": 91.328
+    },
+    {
+      "start": 91.328,
+      "end": 91.328
+    },
+    {
+      "start": 91.328,
+      "end": 91.687
+    },
+    {
+      "start": 91.687,
+      "end": 91.687
+    },
+    {
+      "start": 91.687,
+      "end": 91.982
+    },
+    {
+      "start": 91.982,
+      "end": 91.982
+    },
+    {
+      "start": 91.982,
+      "end": 91.982
+    },
+    {
+      "start": 91.982,
+      "end": 92.469
+    },
+    {
+      "start": 92.469,
+      "end": 93.265
+    },
+    {
+      "start": 94.863,
+      "end": 98.057
+    },
+    {
+      "start": 98.057,
+      "end": 98.057
+    },
+    {
+      "start": 98.057,
+      "end": 98.057
+    },
+    {
+      "start": 98.057,
+      "end": 98.057
+    },
+    {
+      "start": 98.057,
+      "end": 112.359
+    },
+    {
+      "start": 112.359,
+      "end": 113.335
+    },
+    {
+      "start": 113.335,
+      "end": 113.504
+    },
+    {
+      "start": 113.504,
+      "end": 115.236
+    },
+    {
+      "start": 115.236,
+      "end": 118.489
+    },
+    {
+      "start": 120.884,
+      "end": 140.206
+    }
+  ],
+  "duration": 229.32898
+}

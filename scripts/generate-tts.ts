@@ -12,11 +12,14 @@
  *   npx tsx scripts/generate-tts.ts --dry-run <slug>          # Preview prepared text, no API call
  */
 
-import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, statSync, unlinkSync, cpSync } from 'fs'
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'fs'
 import { execFileSync } from 'child_process'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { prepareScript, chunkText, getVoiceSettings } from './prepare-tts.js'
+import { validateMeditation } from './lib/validate-meditation.js'
+import { retry } from './lib/retry.js'
+import { buildBreathingChunk } from './lib/breathing-audio.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -53,17 +56,22 @@ interface TTSResult {
   } | null
 }
 
-/** Load a meditation JSON from the content directory */
+/** Load a meditation JSON from the content directory with runtime validation */
 function loadMeditation(slug: string): MeditationJSON | null {
   const filePath = join(CONTENT_DIR, `${slug}.json`)
   if (!existsSync(filePath)) return null
-  return JSON.parse(readFileSync(filePath, 'utf-8'))
+  const raw = JSON.parse(readFileSync(filePath, 'utf-8'))
+  return validateMeditation(slug, raw) as unknown as MeditationJSON
 }
 
-/** Load all meditation JSONs */
+/** Load all meditation JSONs with runtime validation */
 function loadAllMeditations(): MeditationJSON[] {
   const files = readdirSync(CONTENT_DIR).filter(f => f.endsWith('.json'))
-  return files.map(f => JSON.parse(readFileSync(join(CONTENT_DIR, f), 'utf-8')))
+  return files.map(f => {
+    const slug = f.replace('.json', '')
+    const raw = JSON.parse(readFileSync(join(CONTENT_DIR, f), 'utf-8'))
+    return validateMeditation(slug, raw) as unknown as MeditationJSON
+  })
 }
 
 /** Update the audioPath field in a meditation JSON file */
@@ -156,17 +164,22 @@ async function generateForMeditation(
 
     const hasBreathing = (meditation as unknown as { breathing: unknown }).breathing != null
     const prepared = prepareScript(rawScript, meditation.category, hasBreathing)
-    // Replace [BREATHING_SECTION] with a short silence marker for TTS.
-    // The actual breathing audio gets inserted in post-processing.
-    const ttsReady = prepared.replaceAll(
-      '[BREATHING_SECTION]',
-      '[long pause] [long pause] [long pause]',
-    )
-    const chunks = chunkText(ttsReady)
+
+    // Phase C: split prepared text on [BREATHING_SECTION] markers. The script
+    // becomes an alternating sequence of text segments and breathing positions.
+    // Each text segment is TTS-generated independently; each breathing position
+    // is rendered from the clip bank via buildBreathingChunk. Then we
+    // concatenate in order. No post-hoc splicing, no silencedetect, no stale
+    // snapshot contamination — breathing position is authoritative from the
+    // source script.
+    const MARKER_RE = /\n\s*\[BREATHING_SECTION\]\s*\n/
+    const textSegments = prepared.split(MARKER_RE)
+    const breathingCount = textSegments.length - 1
 
     if (options.dryRun) {
       console.log(`\n--- DRY RUN: ${slug} (${l}) [${meditation.category}] ---`)
-      console.log(`Prepared text (${prepared.length} chars, ${chunks.length} chunk(s)):`)
+      console.log(`Prepared text (${prepared.length} chars):`)
+      console.log(`  ${textSegments.length} text segment(s), ${breathingCount} breathing block(s)`)
       console.log(prepared.slice(0, 500))
       if (prepared.length > 500) console.log(`... (${prepared.length - 500} more chars)`)
       console.log('---')
@@ -176,112 +189,211 @@ async function generateForMeditation(
     if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true })
 
     console.log(`\n  Generating ${slug} (${l}) [${meditation.category}]...`)
-    console.log(`    ${chunks.length} chunk(s), ${prepared.length} chars`)
+    console.log(`    ${textSegments.length} text segment(s), ${breathingCount} breathing block(s), ${prepared.length} chars`)
 
-    const buffers: Buffer[] = []
-    const requestIds: string[] = []
-    const allAlignments: TTSResult['alignment'][] = []
-    let chunkTimeOffset = 0
+    // Interleaved rendering: [text] [breath] [text] [breath] ... [text]
+    // Each piece produces: { audio: Buffer, lines: string[], timestamps: [{start,end}] }
+    // with timestamps RELATIVE to the piece's start (0). We'll apply a cumulative
+    // offset when assembling the final alignment.
+    interface RenderedPiece {
+      audio: Buffer
+      lines: string[]
+      timestamps: Array<{ start: number; end: number }>
+      duration: number  // actual mp3 duration via ffprobe
+      kind: 'text' | 'breathing'
+    }
 
-    for (let i = 0; i < chunks.length; i++) {
-      // Skip chunks that are empty or only whitespace/pauses after preparation
-      const trimmedChunk = chunks[i].replace(/\[.*?\]/g, '').trim()
-      if (!trimmedChunk) {
-        console.log(`    Chunk ${i + 1}/${chunks.length} — skipped (empty after preparation)`)
-        continue
-      }
-      console.log(`    Chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)...`)
-      const { audio, requestId, alignment } = await callTTS(chunks[i], voiceId, voiceSettings)
-      buffers.push(audio)
-      if (requestId) requestIds.push(requestId)
-
-      // Offset alignment times for multi-chunk concatenation
-      if (alignment && chunkTimeOffset > 0) {
-        alignment.character_start_times_seconds = alignment.character_start_times_seconds.map(
-          (t: number) => t + chunkTimeOffset,
-        )
-        alignment.character_end_times_seconds = alignment.character_end_times_seconds.map(
-          (t: number) => t + chunkTimeOffset,
-        )
-      }
-      if (alignment) {
-        // Use actual audio duration (not alignment end time) for chunk offset.
-        // Alignment timestamps don't include silence from [long pause] tags,
-        // so using them causes cumulative drift in multi-chunk concatenation.
-        const tmpPath = join(outDir, `_chunk_tmp.mp3`)
-        writeFileSync(tmpPath, audio)
-        const actualDur = parseFloat(
+    const pieces: RenderedPiece[] = []
+    const ffprobeDur = (buf: Buffer): number => {
+      const tmp = join(outDir, `_piece_tmp_${process.pid}.mp3`)
+      writeFileSync(tmp, buf)
+      try {
+        return parseFloat(
           execFileSync('ffprobe', [
             '-v', 'quiet', '-show_entries', 'format=duration',
-            '-of', 'csv=p=0', tmpPath,
+            '-of', 'csv=p=0', tmp,
           ], { encoding: 'utf-8' }).trim()
         )
-        try { unlinkSync(tmpPath) } catch {}
-        chunkTimeOffset += actualDur
-      }
-      allAlignments.push(alignment)
-
-      if (i < chunks.length - 1) await new Promise(r => setTimeout(r, 200))
-    }
-
-    // Merge alignments
-    const mergedAlignment = {
-      characters: allAlignments.flatMap(a => a?.characters ?? []),
-      character_start_times_seconds: allAlignments.flatMap(a => a?.character_start_times_seconds ?? []),
-      character_end_times_seconds: allAlignments.flatMap(a => a?.character_end_times_seconds ?? []),
-    }
-
-    // Convert character-level timestamps to line-level timestamps.
-    // Strategy: find newline characters in the alignment character array to
-    // split into lines, then take min(start) and max(end) per line.
-    const preparedLines = prepared.split('\n').filter(line => line.trim().length > 0)
-    const lineTimestamps: Array<{ start: number; end: number }> = []
-
-    // Group character indices by line using newline positions
-    const charGroups: number[][] = []
-    let currentGroup: number[] = []
-    for (let ci = 0; ci < mergedAlignment.characters.length; ci++) {
-      if (mergedAlignment.characters[ci] === '\n') {
-        if (currentGroup.length > 0) charGroups.push(currentGroup)
-        currentGroup = []
-      } else {
-        currentGroup.push(ci)
-      }
-    }
-    if (currentGroup.length > 0) charGroups.push(currentGroup)
-
-    // Filter out groups that are only whitespace/empty (blank lines between prepared lines)
-    const nonEmptyGroups = charGroups.filter(group =>
-      group.some(ci => mergedAlignment.characters[ci]?.trim() !== '')
-    )
-
-    // Map each prepared line to its character group
-    for (let li = 0; li < preparedLines.length; li++) {
-      if (li < nonEmptyGroups.length) {
-        const group = nonEmptyGroups[li]
-        const starts = group
-          .map(ci => mergedAlignment.character_start_times_seconds[ci])
-          .filter((t): t is number => t !== undefined && t > 0)
-        const ends = group
-          .map(ci => mergedAlignment.character_end_times_seconds[ci])
-          .filter((t): t is number => t !== undefined && t > 0)
-
-        const start = starts.length > 0 ? Math.min(...starts) : (lineTimestamps.length > 0 ? lineTimestamps[lineTimestamps.length - 1].end : 0)
-        const end = ends.length > 0 ? Math.max(...ends) : start
-        lineTimestamps.push({ start, end })
-      } else {
-        // Fallback: extrapolate from last known timestamp
-        const prev = lineTimestamps.length > 0 ? lineTimestamps[lineTimestamps.length - 1].end : 0
-        lineTimestamps.push({ start: prev, end: prev })
+      } finally {
+        try { unlinkSync(tmp) } catch {}
       }
     }
 
-    // Write audio and fix Xing header for correct mobile duration
+    // Render a single text segment: chunk if too long, call TTS per chunk,
+    // merge alignments with cumulative offset within the segment, return a
+    // single RenderedPiece covering the whole segment.
+    const renderTextSegment = async (segIdx: number, segmentText: string): Promise<RenderedPiece | null> => {
+      const trimmedCheck = segmentText.replace(/\[.*?\]/g, '').trim()
+      if (!trimmedCheck) {
+        console.log(`    Text segment ${segIdx + 1} — skipped (empty after preparation)`)
+        return null
+      }
+      const chunks = chunkText(segmentText)
+      console.log(`    Text segment ${segIdx + 1}/${textSegments.length}: ${chunks.length} chunk(s), ${segmentText.length} chars`)
+
+      const segBuffers: Buffer[] = []
+      const segAlignments: TTSResult['alignment'][] = []
+      let innerOffset = 0
+
+      for (let i = 0; i < chunks.length; i++) {
+        const trimmed = chunks[i].replace(/\[.*?\]/g, '').trim()
+        if (!trimmed) {
+          console.log(`      Chunk ${i + 1}/${chunks.length} — skipped (empty)`)
+          continue
+        }
+        console.log(`      Chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)...`)
+        const { audio, alignment } = await retry(
+          () => callTTS(chunks[i], voiceId, voiceSettings),
+          {
+            maxAttempts: 4,
+            onRetry: (attempt, err, waitMs) => {
+              console.warn(`        retry ${attempt} in ${(waitMs/1000).toFixed(1)}s — ${(err as Error).message.slice(0, 80)}`)
+            },
+          },
+        )
+        segBuffers.push(audio)
+
+        // Offset per-character alignment to account for earlier chunks
+        if (alignment && innerOffset > 0) {
+          alignment.character_start_times_seconds = alignment.character_start_times_seconds.map(t => t + innerOffset)
+          alignment.character_end_times_seconds = alignment.character_end_times_seconds.map(t => t + innerOffset)
+        }
+        if (alignment) {
+          innerOffset += ffprobeDur(audio)
+        }
+        segAlignments.push(alignment)
+
+        if (i < chunks.length - 1) await new Promise(r => setTimeout(r, 200))
+      }
+
+      // Combine segment chunks → one buffer
+      const segCombined = Buffer.concat(segBuffers)
+      const segDuration = innerOffset  // cumulative audio duration after all chunks
+
+      // Merge chunk alignments (all characters concatenated)
+      const merged = {
+        characters: segAlignments.flatMap(a => a?.characters ?? []),
+        character_start_times_seconds: segAlignments.flatMap(a => a?.character_start_times_seconds ?? []),
+        character_end_times_seconds: segAlignments.flatMap(a => a?.character_end_times_seconds ?? []),
+      }
+
+      // Convert character timestamps → line-level timestamps for this segment
+      const segPreparedLines = segmentText.split('\n').filter(l => l.trim().length > 0)
+      const segLineTs: Array<{ start: number; end: number }> = []
+
+      // Group char indices by newline boundaries
+      const charGroups: number[][] = []
+      let currentGroup: number[] = []
+      for (let ci = 0; ci < merged.characters.length; ci++) {
+        if (merged.characters[ci] === '\n') {
+          if (currentGroup.length > 0) charGroups.push(currentGroup)
+          currentGroup = []
+        } else {
+          currentGroup.push(ci)
+        }
+      }
+      if (currentGroup.length > 0) charGroups.push(currentGroup)
+
+      const nonEmptyGroups = charGroups.filter(group =>
+        group.some(ci => merged.characters[ci]?.trim() !== '')
+      )
+
+      for (let li = 0; li < segPreparedLines.length; li++) {
+        if (li < nonEmptyGroups.length) {
+          const group = nonEmptyGroups[li]
+          const starts = group
+            .map(ci => merged.character_start_times_seconds[ci])
+            .filter((t): t is number => t !== undefined && t > 0)
+          const ends = group
+            .map(ci => merged.character_end_times_seconds[ci])
+            .filter((t): t is number => t !== undefined && t > 0)
+          const start = starts.length > 0 ? Math.min(...starts) : (segLineTs.length > 0 ? segLineTs[segLineTs.length - 1].end : 0)
+          const end = ends.length > 0 ? Math.max(...ends) : start
+          segLineTs.push({ start, end })
+        } else {
+          const prev = segLineTs.length > 0 ? segLineTs[segLineTs.length - 1].end : 0
+          segLineTs.push({ start: prev, end: prev })
+        }
+      }
+
+      return {
+        audio: segCombined,
+        lines: segPreparedLines,
+        timestamps: segLineTs,
+        duration: segDuration,
+        kind: 'text',
+      }
+    }
+
+    // Render breathing as a chunk (clip-bank audio + synthetic alignment)
+    const renderBreathingChunk = (breathIdx: number): RenderedPiece | null => {
+      if (!hasBreathing) {
+        console.warn(`    Breathing ${breathIdx + 1} skipped — meditation has no breathing config`)
+        return null
+      }
+      console.log(`    Breathing block ${breathIdx + 1}/${breathingCount}...`)
+      const brConfig = (meditation as unknown as { breathing: { inhale: number; holdIn: number; exhale: number; holdOut: number; rounds: number } }).breathing
+      const chunk = buildBreathingChunk(slug, l, brConfig)
+      const breathBuf = readFileSync(chunk.mp3Path)
+      const actualDur = ffprobeDur(breathBuf)
+      return {
+        audio: breathBuf,
+        lines: chunk.lines.map(c => c.text),
+        timestamps: chunk.lines.map(c => ({ start: c.start, end: c.end })),
+        duration: actualDur,
+        kind: 'breathing',
+      }
+    }
+
+    // Interleave: text[0], breath[0], text[1], breath[1], ..., text[N]
+    for (let i = 0; i < textSegments.length; i++) {
+      const textPiece = await renderTextSegment(i, textSegments[i])
+      if (textPiece) pieces.push(textPiece)
+      if (i < breathingCount) {
+        const breathPiece = renderBreathingChunk(i)
+        if (breathPiece) pieces.push(breathPiece)
+      }
+    }
+
+    // Assemble final audio + alignment with cumulative offset
+    const buffers: Buffer[] = pieces.map(p => p.audio)
+    const finalLines: string[] = []
+    const finalTimestamps: Array<{ start: number; end: number }> = []
+    let cumOffset = 0
+    for (const piece of pieces) {
+      for (let i = 0; i < piece.lines.length; i++) {
+        finalLines.push(piece.lines[i])
+        finalTimestamps.push({
+          start: Math.round((piece.timestamps[i].start + cumOffset) * 1000) / 1000,
+          end: Math.round((piece.timestamps[i].end + cumOffset) * 1000) / 1000,
+        })
+      }
+      cumOffset += piece.duration
+    }
+    const chunkTimeOffset = cumOffset  // final audio duration, used in alignment write below
+
+    // Write audio — raw concat of interleaved TTS + breathing mp3s
     const combined = Buffer.concat(buffers)
     writeFileSync(outPath, combined)
-    // Invalidate any stale insert-breathing snapshot so the next run re-creates
-    // it from this fresh TTS output. Without this, editing scriptEn/scriptFr
-    // and re-running the pipeline would silently ship the pre-edit audio.
+
+    // Post-write drift check: verify the concatenated mp3's ffprobe duration
+    // matches our accumulated `chunkTimeOffset`. Drift >250ms suggests MP3
+    // frame-boundary issues or a count mismatch in the interleave logic.
+    try {
+      const actualDur = parseFloat(
+        execFileSync('ffprobe', [
+          '-v', 'quiet', '-show_entries', 'format=duration',
+          '-of', 'csv=p=0', outPath,
+        ], { encoding: 'utf-8' }).trim()
+      )
+      const drift = Math.abs(actualDur - chunkTimeOffset)
+      if (drift > 0.25) {
+        console.warn(`    ⚠ duration drift: computed ${chunkTimeOffset.toFixed(2)}s vs ffprobe ${actualDur.toFixed(2)}s (|Δ|=${drift.toFixed(2)}s)`)
+      }
+    } catch { /* ignore — duration check is informational */ }
+
+    // Invalidate stale insert-breathing snapshots (legacy safety — the new
+    // generate-tts flow doesn't create them, but older runs may have left some)
     const staleMp3 = outPath.replace('.mp3', '.tts-original.mp3')
     const staleJson = outPath.replace('.mp3', '.tts-original.json')
     for (const p of [staleMp3, staleJson]) {
@@ -295,27 +407,30 @@ async function generateForMeditation(
       }
     }
 
-    // Write alignment JSON alongside the audio
+    // Write alignment JSON alongside the audio.
+    // With the interleaved text+breathing pipeline (Phase C), `finalLines`
+    // includes both spoken TTS lines AND breathing caption lines at correct
+    // cumulative offsets — the alignment is authoritative at generation time,
+    // no post-hoc splicing needed.
     const alignPath = join(outDir, `${slug}.json`)
     writeFileSync(alignPath, JSON.stringify({
-      lines: preparedLines,
-      timestamps: lineTimestamps,
+      lines: finalLines,
+      timestamps: finalTimestamps,
       duration: chunkTimeOffset,
-    }))
+    }, null, 2) + '\n')
 
     // Update the meditation JSON with the audio path
     const audioWebPath = `/audio/${l}/${slug}.mp3`
     updateAudioPath(slug, l, audioWebPath)
 
-    // Copy to public/audio/ for serving
-    const pubDir = join(PROJECT_ROOT, 'public', 'audio', l)
-    mkdirSync(pubDir, { recursive: true })
-    cpSync(outPath, join(pubDir, `${slug}.mp3`))
-    cpSync(alignPath, join(pubDir, `${slug}.json`))
+    // NOTE: audio-storage/ is the canonical source. pipeline.ts `ship` copies
+    // to public/audio/ as its final step, and handleDeploy rsyncs the final
+    // shipping tree from audio-storage/ → /var/www/vesper-static/audio/.
+    // Removing the eager copy here fixes the two-sources-of-truth drift.
 
     const sizeMB = (statSync(outPath).size / 1024 / 1024).toFixed(1)
     console.log(`    Done: ${outPath} (${sizeMB} MB)`)
-    console.log(`    Alignment: ${alignPath} (${lineTimestamps.length} lines)`)
+    console.log(`    Alignment: ${alignPath} (${finalTimestamps.length} lines, ${chunkTimeOffset.toFixed(1)}s)`)
     console.log(`    Updated JSON: audioPath${l === 'fr' ? 'Fr' : 'En'} = ${audioWebPath}`)
   }
 }

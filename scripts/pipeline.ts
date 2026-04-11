@@ -18,6 +18,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, cpSync
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execFileSync } from 'child_process'
+import { acquireLock } from './lib/lockfile.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -586,7 +587,7 @@ function handleSegment(): void {
 
 // ─── SHIP command ────────────────────────────────────────────────────────────
 // Single-command slug → shippable result.
-// Runs: validate → generate-tts → insert-breathing → qa → copy-to-public.
+// Runs: validate → generate-tts (inline breathing chunks) → qa → copy-to-public.
 // Intended workflow: author edits scriptEn/scriptFr in a content JSON, runs
 // `pipeline.ts ship <slug>`, listens in the app. Fails hard on QA red.
 
@@ -608,6 +609,26 @@ function handleShip(): void {
     process.exit(1)
   }
 
+  // Per-slug lock: prevents two `ship` runs on the same meditation from
+  // racing on audio-storage/{lang}/_tmp_* dirs. Cross-meditation parallelism
+  // is still allowed (the lockfile is slug-scoped).
+  const lockPath = join(AUDIO_DIR, '.locks', `ship-${slug}.lock`)
+  let release: () => void = () => {}
+  if (!dryRun) {
+    try {
+      release = acquireLock(lockPath, `ship ${slug}`)
+    } catch (e) {
+      console.error(`\n✗ Cannot ship ${slug}: ${(e as Error).message}\n`)
+      process.exit(1)
+    }
+  }
+  const releaseAndExit = (code: number): never => {
+    release()
+    process.exit(code)
+  }
+  process.on('SIGINT', () => releaseAndExit(130))
+  process.on('SIGTERM', () => releaseAndExit(143))
+
   const langs: Array<'en' | 'fr'> = langArg ? [langArg] : (['en', 'fr'] as const).filter(l => {
     const script = l === 'fr' ? med.scriptFr : med.scriptEn
     return script && String(script).trim().length > 0
@@ -621,44 +642,33 @@ function handleShip(): void {
   for (const lang of langs) {
     console.log(`── ${lang} ──`)
 
-    // 1. Generate TTS (skip if audio already exists and --force not passed)
-    console.log('  [1/4] TTS...')
+    // 1. Generate TTS + inline breathing clips.
+    // Phase C: breathing is now a first-class chunk generated inside
+    // generate-tts.ts alongside TTS chunks, authoritative from source script
+    // markers. No separate insert-breathing step.
+    console.log('  [1/3] TTS + breathing chunks...')
     const ttsArgs = ['tsx', 'scripts/generate-tts.ts', slug, `--lang=${lang}`]
     if (dryRun) ttsArgs.push('--dry-run')
     if (force) ttsArgs.push('--force')
     try {
       run('npx', ttsArgs)
     } catch {
-      console.error(`  TTS failed for ${slug} (${lang})`)
-      process.exit(1)
+      console.error(`  Generation failed for ${slug} (${lang})`)
+      releaseAndExit(1)
     }
     if (dryRun) continue
 
-    // 2. Insert breathing (idempotent: always restores from tts-original first)
-    if (med.breathing) {
-      console.log('  [2/4] Insert breathing clips...')
-      try {
-        run('npx', ['tsx', 'scripts/insert-breathing.ts', slug, `--lang=${lang}`])
-      } catch {
-        console.error(`  insert-breathing failed for ${slug} (${lang})`)
-        process.exit(1)
-      }
-    } else {
-      console.log('  [2/4] No breathing pattern — skipped')
-    }
-
-    // 3. QA gate for this slug
-    console.log('  [3/4] QA...')
+    // 2. QA gate for this slug
+    console.log('  [2/3] QA...')
     try {
       run('npx', ['tsx', 'scripts/qa-meditations.ts', slug, `--lang=${lang}`])
     } catch {
       console.error(`  QA failed for ${slug} (${lang}) — NOT shipping`)
-      process.exit(1)
+      releaseAndExit(1)
     }
 
-    // 4. Copy to public/audio (generate-tts + insert-breathing already do this,
-    //    but make it explicit so `ship` has one clear deployment surface).
-    console.log('  [4/4] Copy to public/audio...')
+    // 3. Copy to public/audio (canonical deploy surface).
+    console.log('  [3/3] Copy to public/audio...')
     const audioSrc = join(AUDIO_DIR, lang)
     const audioDst = join(PROJECT_ROOT, 'public', 'audio', lang)
     if (!existsSync(audioDst)) mkdirSync(audioDst, { recursive: true })
@@ -673,6 +683,7 @@ function handleShip(): void {
   console.log(`=== Ship complete: ${slug} ${langs.join('+')} ===\n`)
   console.log(`Next: visit http://localhost:3100/meditate/${slug}/ or run:`)
   console.log(`  npx tsx scripts/pipeline.ts deploy`)
+  release()
 }
 
 // ─── ASSEMBLE command ────────────────────────────────────────────────────────

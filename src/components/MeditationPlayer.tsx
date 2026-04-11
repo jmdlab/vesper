@@ -4,11 +4,9 @@ import { useLocale } from '@/hooks/useLocale'
 import { useCrossfadeLoop } from '@/hooks/useCrossfadeLoop'
 import { NavBar } from '@/components/NavBar'
 import { BASE, VOICES } from '@/lib/constants'
-import { parseScript } from '@/lib/parseScript'
 import { RelaxAnimation } from '@/components/RelaxAnimation'
 import musicTracks from '@/content/music.json'
 import type { MeditationData } from '@/types'
-import type { ParsedLine } from '@/lib/parseScript'
 
 interface MeditationPlayerProps {
   meditation: MeditationData
@@ -27,96 +25,15 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
-/**
- * Build per-display-line time boundaries from alignment data.
- *
- * Alignment lines (from TTS) include pauses as `[long pause]` entries and
- * spoken lines with `[long pause]` markers inside them. Display lines (from
- * parseScript) have stage-directions, pauses, body, and scripture — in the
- * same spoken order but with different pause representation.
- *
- * Strategy: match spoken lines sequentially. For each display line:
- * - spoken lines (body/scripture) → map to the corresponding alignment spoken
- *   line's timestamp range, extended backward to include preceding pauses
- * - stage-direction (weight=0) → gets a zero-width boundary at the start of
- *   the next spoken line
- * - pause → gets the gap between the previous and next spoken lines
- */
-function buildAlignmentBoundaries(
-  lines: ParsedLine[],
-  alignment: AlignmentData,
-): number[] {
-  const { timestamps, lines: alignLines } = alignment
 
-  // Identify which alignment lines are "spoken" (not pure pause markers)
-  const isPause = (text: string) => /^\[.*pause.*\]$/i.test(text.trim())
-  const spokenAlignIndices: number[] = []
-  for (let i = 0; i < alignLines.length; i++) {
-    if (!isPause(alignLines[i])) {
-      spokenAlignIndices.push(i)
-    }
-  }
-
-  // For each spoken alignment line, compute the time range including
-  // preceding pauses (so the spoken line "owns" the silence before it).
-  const spokenRanges: Array<{ start: number; end: number }> = []
-  for (let si = 0; si < spokenAlignIndices.length; si++) {
-    const alignIdx = spokenAlignIndices[si]
-    const prevAlignIdx = si > 0 ? spokenAlignIndices[si - 1] : -1
-
-    // Start = end of previous spoken line (or 0 for the first one)
-    const start = prevAlignIdx >= 0 ? timestamps[prevAlignIdx].end : 0
-    const end = timestamps[alignIdx].end
-    spokenRanges.push({ start, end })
-  }
-
-  // Map display lines to spoken ranges sequentially
-  let spokenIdx = 0
-  const boundaries: number[] = []
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
-    if (line.type === 'body' || line.type === 'scripture') {
-      if (spokenIdx < spokenRanges.length) {
-        boundaries.push(spokenRanges[spokenIdx].end)
-        spokenIdx++
-      } else {
-        // Shouldn't happen, but fallback to end
-        boundaries.push(alignment.duration)
-      }
-    } else if (line.type === 'stage-direction') {
-      // Stage direction gets boundary at the start of the next spoken line
-      if (spokenIdx < spokenRanges.length) {
-        boundaries.push(spokenRanges[spokenIdx].start)
-      } else {
-        boundaries.push(alignment.duration)
-      }
-    } else if (line.type === 'pause') {
-      // Pause: assign the gap between previous spoken end and next spoken start.
-      // Since spoken ranges already include preceding pauses, give pause lines
-      // a boundary at the start of the next spoken range.
-      if (spokenIdx < spokenRanges.length) {
-        boundaries.push(spokenRanges[spokenIdx].start)
-      } else {
-        boundaries.push(alignment.duration)
-      }
-    }
-  }
-
-  return boundaries
-}
 
 export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps) {
   const { locale, t } = useLocale()
   const audioRef = useRef<HTMLAudioElement>(null)
   
-  const textRef = useRef<HTMLDivElement>(null)
-
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [activeLineIndex, setActiveLineIndex] = useState(-1)
   const [activeVoice, setActiveVoice] = useState<'v1' | 'v2'>(() => {
     if (typeof window === 'undefined') return 'v1'
     return localStorage.getItem('vesper-voice') === 'alt' ? 'v2' : 'v1'
@@ -212,7 +129,6 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
     }
     setIsPlaying(false)
     setCurrentTime(0)
-    setActiveLineIndex(-1)
     setActiveVoice(voice)
     localStorage.setItem('vesper-voice', voice === 'v2' ? 'alt' : 'default')
   }, [])
@@ -225,66 +141,14 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
     setIsPlaying(false)
     setCurrentTime(0)
     setDuration(0)
-    setActiveLineIndex(-1)
     setAlignment(null)
     setSelectedDuration(dur)
     ambient.pause()
   }, [])
 
-  const allLines = parseScript(script)
-
-  // For duration variants, trim display lines to match the assembled alignment.
-  // The assembled alignment has fewer spoken lines than the full script.
-  const lines = useMemo(() => {
-    if (!isDurationVariant || !alignment) return allLines
-
-    // Count spoken lines in the alignment (non-pause lines)
-    const isPause = (text: string) => /^\[.*pause.*\]$/i.test(text.trim())
-    const alignSpokenCount = alignment.lines.filter(l => !isPause(l)).length
-
-    // Walk through display lines, counting spoken ones (body/scripture)
-    let spokenSeen = 0
-    let cutIndex = allLines.length
-    for (let i = 0; i < allLines.length; i++) {
-      if (allLines[i].type === 'body' || allLines[i].type === 'scripture') {
-        spokenSeen++
-        if (spokenSeen > alignSpokenCount) {
-          cutIndex = i
-          break
-        }
-      }
-    }
-
-    return allLines.slice(0, cutIndex)
-  }, [allLines, alignment, isDurationVariant])
-
-  const totalWeight = lines.reduce((sum, l) => sum + l.weight, 0)
-
-  const lineBoundaries = useMemo(() => {
-    // Use real alignment timestamps when available
-    if (alignment) {
-      return buildAlignmentBoundaries(lines, alignment)
-    }
-    // Fallback: weight-based estimation
-    return lines.reduce<number[]>((acc, line) => {
-      const prev = acc.length > 0 ? acc[acc.length - 1] : 0
-      acc.push(prev + (duration > 0 ? (line.weight / totalWeight) * duration : 0))
-      return acc
-    }, [])
-  }, [alignment, lines, duration, totalWeight])
-
-  // Map from line index to rendered DOM child index (pauses render null)
-  const domIndexMap = useMemo(() => {
-    const map = new Map<number, number>()
-    let domIdx = 0
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i].type !== 'pause') {
-        map.set(i, domIdx)
-        domIdx++
-      }
-    }
-    return map
-  }, [lines])
+  // Note: line-level parsing, boundary tracking, and DOM index mapping were
+  // removed along with karaoke highlighting. Prayer text uses a simple
+  // script.split('\n') directly in the JSX below.
 
   // For music sessions: the playable zone between fade-in and fade-out
   const musicZone = useMemo(() => {
@@ -307,27 +171,10 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
 
     setCurrentTime(time)
 
-    if (isMusic) return // no script lines to track
-
-    let idx = lineBoundaries.findIndex((boundary) => time < boundary)
-    let newIndex = idx === -1 ? lines.length - 1 : idx
-
-    // Skip past pause lines (not rendered) to the next visible line
-    while (newIndex < lines.length && lines[newIndex].type === 'pause') {
-      newIndex++
-    }
-    if (newIndex >= lines.length) newIndex = lines.length - 1
-
-    setActiveLineIndex(newIndex)
-
-    if (newIndex >= 0 && textRef.current) {
-      const domIdx = domIndexMap.get(newIndex)
-      if (domIdx !== undefined) {
-        const lineEl = textRef.current.children[domIdx] as HTMLElement
-        if (lineEl) lineEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }
-    }
-  }, [duration, isMusic, musicZone, lineBoundaries, lines, domIndexMap])
+    // Karaoke/line-tracking intentionally removed — only prayer meditations
+    // display script text (static render in the JSX below), so no line-by-line
+    // time cursor is needed for the main player.
+  }, [duration, isMusic, musicZone])
 
   useEffect(() => {
     if (!('mediaSession' in navigator) || !audioPath) return
@@ -408,24 +255,7 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
     }
   }, [musicZone])
 
-  const handleLineClick = useCallback((lineIndex: number) => {
-    if (!audioRef.current || !lineBoundaries.length) return
-
-    // Seek to the start of this line's time boundary
-    // The boundary at index i is the END time of line i
-    // So the START time of line i = boundary of line i-1 (or 0 for first line)
-    const startTime = lineIndex > 0 ? lineBoundaries[lineIndex - 1] : 0
-
-    audioRef.current.currentTime = startTime
-    setCurrentTime(startTime)
-    setActiveLineIndex(lineIndex)
-
-    // Auto-play if not already playing
-    if (!isPlaying) {
-      audioRef.current.play().catch(() => {})
-      if (musicOn) ambient.play()
-    }
-  }, [lineBoundaries, isPlaying, musicOn])
+  // handleLineClick removed — karaoke disabled; prayer JSX doesn't bind clicks.
 
   // For music mode, show progress within the loopable zone only
   const displayTime = musicZone
@@ -451,8 +281,7 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
           onEnded={() => {
             if (!isMusic) {
               setIsPlaying(false)
-              setActiveLineIndex(-1)
-              ambient.pause()
+                        ambient.pause()
             }
           }}
         />

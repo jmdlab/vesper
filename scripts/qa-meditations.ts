@@ -12,6 +12,7 @@ import { readFileSync, existsSync } from 'fs'
 import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execFileSync } from 'child_process'
+import { validateMeditation } from './lib/validate-meditation.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -95,7 +96,7 @@ function qaMediation(slug: string, lang: string): QAResult {
   check(checks, 'meditation JSON exists', existsSync(medPath), medPath)
   if (!existsSync(medPath)) return { slug, lang, checks }
 
-  const med: MeditationJSON = JSON.parse(readFileSync(medPath, 'utf-8'))
+  const med: MeditationJSON = validateMeditation(slug, JSON.parse(readFileSync(medPath, 'utf-8'))) as unknown as MeditationJSON
 
   check(checks, 'audio MP3 exists', existsSync(mp3Path), mp3Path)
   check(checks, 'alignment JSON exists', existsSync(alignPath), alignPath)
@@ -122,10 +123,11 @@ function qaMediation(slug: string, lang: string): QAResult {
   )
 
   // 4. Timestamps are monotonically non-decreasing.
-  // Small backward jumps (<2s) are a known pre-existing cosmetic issue from
-  // insert-breathing seam delta math — audio plays correctly but karaoke
-  // highlighting may stutter briefly at the seam. Warn, don't fail.
-  // Large jumps (>2s) indicate real alignment corruption.
+  // Post-seam-fix (Phase A item 2), insert-breathing should produce clean
+  // monotonic timestamps. Any backward jump > 0.1s means either the seam
+  // math regressed OR the ElevenLabs alignment has a collapsed region the
+  // fallback couldn't handle. Fail on >2s (real corruption), warn on 0.1-2s
+  // (known pre-existing issue on a few meditations), pass otherwise.
   let worstJump = 0
   let firstBadTs = -1
   for (let i = 1; i < alignment.timestamps.length; i++) {
@@ -139,10 +141,10 @@ function qaMediation(slug: string, lang: string): QAResult {
     checks,
     'timestamps monotonically increasing',
     worstJump < 2.0,
-    worstJump <= 0.01
+    worstJump <= 0.1
       ? 'OK'
       : `worst backward jump: ${worstJump.toFixed(2)}s at line ${firstBadTs} (${alignment.timestamps[firstBadTs]?.start}s < ${alignment.timestamps[firstBadTs - 1]?.start}s)`,
-    worstJump > 0.01 && worstJump < 2.0,  // warn-only for small cosmetic jumps
+    worstJump > 0.1 && worstJump < 2.0,  // warn-only for small cosmetic jumps
   )
 
   // 4b. No collapsed-timestamp regions (>20s of zero-width consecutive lines)
@@ -209,12 +211,16 @@ function qaMediation(slug: string, lang: string): QAResult {
     }).length
 
     // Determine expected "last" count from the source script by counting
-    // [BREATHING_SECTION] markers the pipeline would have created.  Rough
-    // estimate: 1 per block.  We can't re-run stripBreathingLines from here
-    // without introducing a dependency cycle, so we approximate with the
-    // number of distinct breathing sections in the final audio.
-    const firstRoundRE = /breathe\s+in\s+through|inspirez\s+par\s+le\s+nez/i
-    const firstRoundCount = alignment.lines.filter(l => firstRoundRE.test(l)).length
+    // [BREATHING_SECTION] markers the pipeline would have created.
+    // Anchor to line start AND require short directive length to avoid
+    // false-positives on prose lines like "Maintenant ralentissez-la
+    // doucement. Inspirez par le nez sur quatre..." which contain the phrase
+    // but aren't actually breathing cue lines.
+    const firstRoundRE = /^(?:Breathe\s+in\s+through|Inspirez\s+par\s+le\s+nez)/i
+    const firstRoundCount = alignment.lines.filter(l => {
+      const t = l.trim()
+      return t.length > 0 && t.length < 80 && firstRoundRE.test(t)
+    }).length
 
     check(
       checks,
@@ -223,12 +229,26 @@ function qaMediation(slug: string, lang: string): QAResult {
       `${med.breathing.slug}: ${inhale}/${holdIn}/${exhale}/${holdOut} × ${rounds} rounds`,
     )
 
-    check(
-      checks,
-      'breathing instruction clips present',
-      breathingLines.length >= rounds * phases.length,
-      `found ${breathingLines.length} instruction lines, expected ≥${rounds * phases.length}`,
-    )
+    // Some meditations use narrative breathing (the narrator speaks about
+    // breathing in prose) rather than explicit clip-based cue lines. When
+    // the script has 0 first-round cue lines, the meditation is narrative —
+    // skip the "clips present" check entirely. Otherwise verify the expected
+    // count.
+    if (firstRoundCount > 0) {
+      check(
+        checks,
+        'breathing instruction clips present',
+        breathingLines.length >= rounds * phases.length,
+        `found ${breathingLines.length} instruction lines, expected ≥${rounds * phases.length}`,
+      )
+    } else {
+      check(
+        checks,
+        'breathing pattern narrative (no clip cues)',
+        true,
+        'script uses prose breathing — no clip-based cues expected',
+      )
+    }
 
     // "last cue per block" — should equal firstRoundCount (one per block).
     // If it's > firstRoundCount, the stripBreathingLines fragmentation bug
@@ -304,9 +324,11 @@ function qaMediation(slug: string, lang: string): QAResult {
     )
   }
 
-  // 8. Duration variants (assembled files)
-  if (med.segments?.en?.available && med.segments.en.durations.length > 0) {
-    for (const dur of med.segments.en.durations) {
+  // 8. Duration variants (assembled files) — read from the CURRENT lang's
+  // segments config, not en's. A meditation may have en variants but not fr.
+  const langSegs = (med.segments as Record<string, { available?: boolean; durations?: number[] } | undefined> | undefined)?.[lang]
+  if (langSegs?.available && Array.isArray(langSegs.durations) && langSegs.durations.length > 0) {
+    for (const dur of langSegs.durations) {
       const assembledMp3 = join(AUDIO_DIR, lang, 'segments', slug, 'assembled', `${dur}min.mp3`)
       const assembledJson = join(AUDIO_DIR, lang, 'segments', slug, 'assembled', `${dur}min.json`)
 

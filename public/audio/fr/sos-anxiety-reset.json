@@ -1,1 +1,432 @@
-{"lines":["[long pause]","Stop. Ici. Maintenant. Ce que ton esprit est en train de faire — les spirales, les et si, les pires scénarios — on va interrompre ça.","[long pause]","L'anxiété, c'est le système d'alarme de ton cerveau. Il n'est pas cassé. Il déclenche juste une fausse alerte. Et on va baisser le volume.","[long pause]","[long pause]","[long pause]","D'abord, ta respiration. Respiration en carré. Quatre temps égaux. Inspire. Retiens. Expire. Retiens. Ça réinitialise la variabilité de ton rythme cardiaque — c'est comme un bouton de réinitialisation pour ton système nerveux.","[long pause]","On y va.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Encore.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Continue.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Dernier cycle.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Bien. Ton corps est plus calme. Maintenant, occupons-nous de ton esprit.","[long pause]","Voilà ce que je veux que tu comprennes. Tu n'es pas tes pensées. Les pensées sont des événements. Elles viennent et repartent. Ce ne sont pas des faits. Ce ne sont pas des prédictions. C'est juste ton cerveau qui génère du bruit.","[long pause]","Alors au lieu de combattre une pensée, on va faire autrement. On va la remarquer. L'étiqueter. Et la laisser passer.","[long pause]","[long pause]","[long pause]","La pensée qui te cause le plus de détresse en ce moment — amène-la au premier plan. Ne la repousse pas. Regarde-la.","[long pause]","Maintenant dis-toi : je remarque que j'ai la pensée que...","[long pause]","Et complète. Peu importe ce que c'est.","[long pause]","[long pause]","[long pause]","Redis-le. Je remarque que j'ai la pensée que...","[long pause]","[long pause]","[long pause]","Tu sens la différence ? Tu n'es plus à l'intérieur de la pensée. Tu l'observes. Tu es l'observateur, pas le participant. Cette distance — ce petit décalage — c'est tout ce qui compte.","[long pause]","[long pause]","[long pause]","La pensée est toujours là. C'est normal. Elle n'a pas besoin de disparaître. Elle n'a juste plus le droit de conduire.","[long pause]","[long pause]","[long pause]","Ne crains rien, car je suis avec toi.","[long pause]","[long pause]","[long pause]","Tu n'as pas besoin de tout résoudre maintenant. Tu as juste besoin de traverser cet instant. Et c'est déjà ce que tu fais.","[long pause]","[long pause]","[BREATHING_SECTION]","[long pause]","Tu vas bien. Pas parce que l'anxiété a disparu — mais parce que tu es plus grand qu'elle.","[long pause]"],"timestamps":[{"start":0.064,"end":0.264},{"start":0.264,"end":8.53},{"start":8.53,"end":11.718},{"start":11.718,"end":19.947},{"start":19.947,"end":23.7},{"start":23.7,"end":25.288},{"start":25.288,"end":25.366},{"start":25.366,"end":43.265},{"start":43.265,"end":44.914},{"start":44.914,"end":46.219},{"start":46.219,"end":46.291},{"start":46.291,"end":46.291},{"start":46.291,"end":46.54},{"start":46.54,"end":46.54},{"start":46.54,"end":46.54},{"start":46.54,"end":46.623},{"start":46.623,"end":46.623},{"start":46.623,"end":46.716},{"start":46.716,"end":46.716},{"start":46.716,"end":46.716},{"start":46.716,"end":46.716},{"start":46.716,"end":51.654},{"start":51.654,"end":52.437},{"start":52.437,"end":52.437},{"start":52.437,"end":52.437},{"start":52.437,"end":53.583},{"start":53.583,"end":53.583},{"start":53.583,"end":55.839},{"start":55.839,"end":55.839},{"start":55.839,"end":56.047},{"start":56.047,"end":56.879},{"start":56.879,"end":56.915},{"start":56.915,"end":56.975},{"start":56.975,"end":56.975},{"start":56.975,"end":57.035},{"start":57.035,"end":57.131},{"start":57.131,"end":58.425},{"start":58.425,"end":58.425},{"start":58.425,"end":59.588},{"start":59.588,"end":59.588},{"start":59.588,"end":59.637},{"start":59.637,"end":59.637},{"start":59.637,"end":59.686},{"start":59.686,"end":59.686},{"start":59.686,"end":59.735},{"start":59.735,"end":59.735},{"start":59.735,"end":59.784},{"start":59.784,"end":59.784},{"start":59.784,"end":59.837},{"start":59.837,"end":63.271},{"start":63.271,"end":63.271},{"start":63.271,"end":63.271},{"start":63.271,"end":63.271},{"start":63.271,"end":64.468},{"start":64.468,"end":66.594},{"start":66.594,"end":66.594},{"start":66.594,"end":66.594},{"start":66.594,"end":67.735},{"start":67.735,"end":67.735},{"start":67.735,"end":67.735},{"start":67.735,"end":67.735},{"start":67.735,"end":70.693},{"start":70.693,"end":70.693},{"start":70.693,"end":70.693},{"start":70.693,"end":70.693},{"start":70.693,"end":70.693},{"start":70.693,"end":88.007},{"start":88.007,"end":95.332}],"duration":155.167347}
+{
+  "lines": [
+    "[long pause]",
+    "Stop. Ici. Maintenant. Ce que ton esprit est en train de faire — les spirales, les et si, les pires scénarios — on va interrompre ça.",
+    "[long pause]",
+    "L'anxiété, c'est le système d'alarme de ton cerveau. Il n'est pas cassé. Il déclenche juste une fausse alerte. Et on va baisser le volume.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "D'abord, ta respiration. Respiration en carré. Quatre temps égaux. Inspire. Retiens. Expire. Retiens. Ça réinitialise la variabilité de ton rythme cardiaque — c'est comme un bouton de réinitialisation pour ton système nerveux.",
+    "[long pause]",
+    "On y va.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Encore.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Continue.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Dernier cycle.",
+    "[long pause]",
+    "Inspire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "Expire... deux... trois... quatre.",
+    "Retiens... deux... trois... quatre.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Bien. Ton corps est plus calme. Maintenant, occupons-nous de ton esprit.",
+    "[long pause]",
+    "Voilà ce que je veux que tu comprennes. Tu n'es pas tes pensées. Les pensées sont des événements. Elles viennent et repartent. Ce ne sont pas des faits. Ce ne sont pas des prédictions. C'est juste ton cerveau qui génère du bruit.",
+    "[long pause]",
+    "Alors au lieu de combattre une pensée, on va faire autrement. On va la remarquer. L'étiqueter. Et la laisser passer.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "La pensée qui te cause le plus de détresse en ce moment — amène-la au premier plan. Ne la repousse pas. Regarde-la.",
+    "[long pause]",
+    "Maintenant dis-toi : je remarque que j'ai la pensée que...",
+    "[long pause]",
+    "Et complète. Peu importe ce que c'est.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Redis-le. Je remarque que j'ai la pensée que...",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Tu sens la différence ? Tu n'es plus à l'intérieur de la pensée. Tu l'observes. Tu es l'observateur, pas le participant. Cette distance — ce petit décalage — c'est tout ce qui compte.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "La pensée est toujours là. C'est normal. Elle n'a pas besoin de disparaître. Elle n'a juste plus le droit de conduire.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Ne crains rien, car je suis avec toi.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Tu n'as pas besoin de tout résoudre maintenant. Tu as juste besoin de traverser cet instant. Et c'est déjà ce que tu fais.",
+    "[long pause]",
+    "Inspire lentement. Et expire.",
+    "[long pause]",
+    "[long pause]",
+    "[long pause]",
+    "Tu vas bien. Pas parce que l'anxiété a disparu — mais parce que tu es plus grand qu'elle.",
+    "[long pause]"
+  ],
+  "timestamps": [
+    {
+      "start": 0.08,
+      "end": 0.396
+    },
+    {
+      "start": 0.396,
+      "end": 11.17
+    },
+    {
+      "start": 11.17,
+      "end": 12.918
+    },
+    {
+      "start": 12.918,
+      "end": 20.921
+    },
+    {
+      "start": 20.921,
+      "end": 20.921
+    },
+    {
+      "start": 20.921,
+      "end": 21.044
+    },
+    {
+      "start": 21.044,
+      "end": 21.044
+    },
+    {
+      "start": 21.044,
+      "end": 21.044
+    },
+    {
+      "start": 21.044,
+      "end": 23.055
+    },
+    {
+      "start": 23.055,
+      "end": 23.055
+    },
+    {
+      "start": 23.055,
+      "end": 28.812
+    },
+    {
+      "start": 28.812,
+      "end": 28.812
+    },
+    {
+      "start": 28.812,
+      "end": 28.812
+    },
+    {
+      "start": 28.812,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.024
+    },
+    {
+      "start": 31.024,
+      "end": 31.688
+    },
+    {
+      "start": 31.688,
+      "end": 31.688
+    },
+    {
+      "start": 31.688,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 32.264
+    },
+    {
+      "start": 32.264,
+      "end": 33.447
+    },
+    {
+      "start": 33.447,
+      "end": 35.187
+    },
+    {
+      "start": 35.187,
+      "end": 36.567
+    },
+    {
+      "start": 36.567,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 39.045
+    },
+    {
+      "start": 39.045,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.536
+    },
+    {
+      "start": 41.536,
+      "end": 41.596
+    },
+    {
+      "start": 41.596,
+      "end": 41.596
+    },
+    {
+      "start": 41.596,
+      "end": 44.462
+    },
+    {
+      "start": 44.462,
+      "end": 47.617
+    },
+    {
+      "start": 47.617,
+      "end": 47.617
+    },
+    {
+      "start": 47.617,
+      "end": 48.933
+    },
+    {
+      "start": 48.933,
+      "end": 48.933
+    },
+    {
+      "start": 48.933,
+      "end": 48.933
+    },
+    {
+      "start": 48.933,
+      "end": 48.933
+    },
+    {
+      "start": 48.933,
+      "end": 48.933
+    },
+    {
+      "start": 48.933,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 51.086
+    },
+    {
+      "start": 51.086,
+      "end": 53.243
+    },
+    {
+      "start": 56.121,
+      "end": 65.389
+    },
+    {
+      "start": 65.389,
+      "end": 70.145
+    },
+    {
+      "start": 70.145,
+      "end": 70.145
+    },
+    {
+      "start": 70.145,
+      "end": 70.145
+    },
+    {
+      "start": 70.145,
+      "end": 71.144
+    },
+    {
+      "start": 71.144,
+      "end": 71.144
+    },
+    {
+      "start": 71.144,
+      "end": 71.533
+    },
+    {
+      "start": 71.533,
+      "end": 71.533
+    },
+    {
+      "start": 71.533,
+      "end": 74.007
+    },
+    {
+      "start": 76.162,
+      "end": 90.618
+    },
+    {
+      "start": 90.618,
+      "end": 90.618
+    },
+    {
+      "start": 90.618,
+      "end": 90.618
+    },
+    {
+      "start": 90.618,
+      "end": 95.812
+    },
+    {
+      "start": 95.812,
+      "end": 96.131
+    },
+    {
+      "start": 96.131,
+      "end": 97.033
+    },
+    {
+      "start": 97.033,
+      "end": 97.033
+    },
+    {
+      "start": 97.033,
+      "end": 97.869
+    },
+    {
+      "start": 97.869,
+      "end": 117.274
+    },
+    {
+      "start": 117.274,
+      "end": 123.194
+    },
+    {
+      "start": 123.194,
+      "end": 123.307
+    },
+    {
+      "start": 123.307,
+      "end": 124.275
+    },
+    {
+      "start": 124.275,
+      "end": 124.275
+    },
+    {
+      "start": 124.275,
+      "end": 130.366
+    }
+  ],
+  "duration": 259.787755
+}
