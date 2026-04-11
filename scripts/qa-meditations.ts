@@ -192,8 +192,13 @@ function qaMediation(slug: string, lang: string): QAResult {
     const phases = [inhale, holdIn, exhale, holdOut].filter(v => v > 0)
 
     // Dual-language breathing-line detection. Works for EN ("breathe in",
-    // "one more") and FR ("inspirez", "une dernière fois", "encore").
-    const BREATH_RE = /breathe\s+in|inhale|hold\s+gently|breathe\s+out|exhale|again\.?\s*in|one\s+more|inspir\w*|expir\w*|retene[zr]|une\s+derni[èe]re/i
+    // "one more", "in for four", "out for four", "hold for four") and FR
+    // ("inspirez", "une dernière fois", "encore"). The "in for X / out for X /
+    // hold for X" patterns are needed because EN middle-round labels (rounds
+    // 2..N-1) use those forms instead of "breathe in/out". Without them, QA
+    // counts only first-round + again + one-more labels (5 per block) and
+    // false-fails meditations whose breathing was generated correctly.
+    const BREATH_RE = /breathe\s+in|inhale|hold\s+gently|breathe\s+out|exhale|again\.?\s*in|one\s+more|\bin\s+for\s+\w+|\bout\s+for\s+\w+|\bhold\s+for\s+\w+|\band\s+hold\s+for\b|inspir\w*|expir\w*|retene[zr]|une\s+derni[èe]re/i
     const breathingLines = alignment.lines.filter(l => BREATH_RE.test(l))
 
     // Count occurrences of the "last one" final-round cue in BOTH languages.
