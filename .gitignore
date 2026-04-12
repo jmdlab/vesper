@@ -30,10 +30,13 @@ scripts/prompts/
 # Legacy artifacts
 MIGRATION.md
 CODE-AUDIT.md
-MIGRATION.md
-CODE-AUDIT.md
-MIGRATION.md
 scripts/rewrites/*/REVIEW.md
 audio-storage/
 exported-content/
 .astro/
+
+# Claude/internal workspace files — NEVER commit to public repo
+CLAUDE.md
+docs/PIPELINE-ARCHITECTURE.md
+docs/internal/
+.claude/
