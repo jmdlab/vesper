@@ -38,6 +38,7 @@ export function BibleReaderClient({
   const [currentChapter, setCurrentChapter] = useState(initialChapter)
   const [verses, setVerses] = useState<VerseData[]>(initialVerses)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [navOpen, setNavOpen] = useState(false)
   const [navStep, setNavStep] = useState<'testament' | 'book' | 'chapter'>('testament')
   const [navTestament, setNavTestament] = useState<'OT' | 'NT'>('OT')
@@ -61,20 +62,27 @@ export function BibleReaderClient({
 
   const fetchChapter = useCallback(async (bookSlug: string, chapter: number) => {
     setLoading(true)
+    setError(null)
     try {
       const res = await fetch(`${BASE}/data/${bookSlug}.json`)
-      if (res.ok) {
-        const data = await res.json()
-        const chapterVerses = data.chapters[String(chapter)]
-        if (chapterVerses) {
-          setVerses(chapterVerses)
-        }
+      if (!res.ok) {
+        setError(t.bible.loadError)
+        return
       }
+      const data = await res.json()
+      const chapterVerses = data.chapters[String(chapter)]
+      if (chapterVerses) {
+        setVerses(chapterVerses)
+      } else {
+        setError(t.bible.loadError)
+      }
+    } catch {
+      setError(t.bible.loadError)
     } finally {
       setLoading(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [])
+  }, [t.bible.loadError])
 
   const navigateTo = useCallback((book: BookWithCount, chapter: number) => {
     setCurrentBook(book)
@@ -639,6 +647,16 @@ export function BibleReaderClient({
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="h-5 animate-pulse rounded bg-[var(--surface)]" style={{ width: `${60 + Math.random() * 40}%` }} />
             ))}
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center py-16 text-center">
+            <p className="text-[17px] text-[var(--muted)]">{error}</p>
+            <button
+              onClick={() => currentBook && fetchChapter(currentBook.slug, currentChapter)}
+              className="mt-4 rounded-lg bg-[var(--surface)] px-4 py-2 text-sm text-[var(--accent)] transition-colors active:opacity-70"
+            >
+              {t.bible.next === 'Next' ? 'Retry' : 'Réessayer'}
+            </button>
           </div>
         ) : (
           <article className="mx-auto max-w-lg">

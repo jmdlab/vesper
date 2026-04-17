@@ -30,15 +30,22 @@ export function SearchClient({ books = [] }: SearchClientProps) {
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
+  const [searchError, setSearchError] = useState(false)
   const [testament, setTestament] = useState<'OT' | 'NT'>('OT')
 
   const search = useCallback(async () => {
     if (query.length < 2) return
     setLoading(true)
     setSearched(true)
+    setSearchError(false)
 
     try {
       const res = await fetch(`${BASE}/search-index.json`)
+      if (!res.ok) {
+        setSearchError(true)
+        setResults([])
+        return
+      }
       const allVerses: SearchResult[] = await res.json()
 
       const q = query.toLowerCase()
@@ -51,6 +58,7 @@ export function SearchClient({ books = [] }: SearchClientProps) {
 
       setResults(matches)
     } catch {
+      setSearchError(true)
       setResults([])
     } finally {
       setLoading(false)
@@ -125,7 +133,13 @@ export function SearchClient({ books = [] }: SearchClientProps) {
             </div>
           )}
 
-          {!loading && searched && results.length === 0 && (
+          {!loading && searchError && (
+            <p className="py-12 text-center text-[var(--muted)]">
+              {t.bible.searchUnavailable}
+            </p>
+          )}
+
+          {!loading && searched && !searchError && results.length === 0 && (
             <p className="py-12 text-center text-[var(--muted)]">
               {t.bible.noResults}
             </p>

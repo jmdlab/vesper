@@ -16,7 +16,9 @@ export function SettingsClient() {
 
   useEffect(function syncFromStorage() {
     const storedVoice = localStorage.getItem('vesper-voice')
-    if (storedVoice) setVoice(storedVoice as VoiceOption)
+    if (storedVoice === 'default' || storedVoice === 'alt') {
+      setVoice(storedVoice)
+    }
     const storedMusic = localStorage.getItem('vesper-music')
     if (storedMusic) setMusicOn(storedMusic !== 'off')
   }, [])

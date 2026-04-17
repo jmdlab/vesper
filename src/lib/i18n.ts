@@ -18,6 +18,8 @@ const translations = {
       previousChapter: 'Previous chapter',
       nextChapter: 'Next chapter',
       listen: 'Listen',
+      loadError: 'Failed to load chapter. Please try again.',
+      searchUnavailable: 'Search unavailable. Please try again later.',
       readChapter: 'Read chapter',
       openBible: 'Open Bible',
       // Book categories
@@ -145,6 +147,8 @@ const translations = {
       previousChapter: 'Chapitre précédent',
       nextChapter: 'Chapitre suivant',
       listen: 'Écouter',
+      loadError: 'Impossible de charger le chapitre. Veuillez réessayer.',
+      searchUnavailable: 'Recherche indisponible. Veuillez réessayer plus tard.',
       readChapter: 'Lire le chapitre',
       openBible: 'Ouvrir la Bible',
       // Book categories
