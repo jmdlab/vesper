@@ -172,9 +172,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
       </div>
     </nav>
     <script is:inline>applyVesperLocale();</script>
-    <script is:inline>
+    <script is:inline define:vars={{ baseUrl: import.meta.env.BASE_URL }}>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js');
+        navigator.serviceWorker.register(baseUrl.replace(/\/$/, '') + '/sw.js');
       }
     </script>
   </body>
