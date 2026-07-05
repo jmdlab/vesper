@@ -38,7 +38,7 @@ export function BibleBooksClient({ books, todaysReading }: BibleBooksClientProps
         </h1>
         <div className="flex items-center gap-3">
           <a
-            href={`${BASE}/search`}
+            href={`${BASE}/bible/search`}
             className="rounded-md border border-[var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
             {t.bible.search}
@@ -49,7 +49,7 @@ export function BibleBooksClient({ books, todaysReading }: BibleBooksClientProps
       {/* Today's Reading */}
       {todaysReading && (
         <a
-          href={`${BASE}/${todaysReading.book.slug}/${todaysReading.chapter}`}
+          href={`${BASE}/bible/${todaysReading.book.slug}/${todaysReading.chapter}`}
           className="mb-8 block rounded-xl bg-[var(--surface)] p-5 transition-colors hover:bg-[var(--border)]"
         >
           <p className="text-xs font-medium uppercase tracking-wider text-[var(--accent)]">
@@ -101,7 +101,7 @@ export function BibleBooksClient({ books, todaysReading }: BibleBooksClientProps
         {filtered.map((book) => (
           <a
             key={book.slug}
-            href={`${BASE}/${book.slug}`}
+            href={`${BASE}/bible/${book.slug}`}
             className="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-[var(--surface)]"
           >
             <span className="text-[var(--text)]">

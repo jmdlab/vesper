@@ -29,7 +29,7 @@ export function ChapterReaderClient({ book, chapter, verses }: ChapterReaderClie
       <nav className="mx-auto mt-10 flex max-w-lg items-center justify-between">
         {hasPrev ? (
           <a
-            href={`${BASE}/${book.slug}/${chapter - 1}`}
+            href={`${BASE}/bible/${book.slug}/${chapter - 1}`}
             className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
             &larr; {t.bible.chapter} {chapter - 1}
@@ -39,7 +39,7 @@ export function ChapterReaderClient({ book, chapter, verses }: ChapterReaderClie
         )}
         {hasNext ? (
           <a
-            href={`${BASE}/${book.slug}/${chapter + 1}`}
+            href={`${BASE}/bible/${book.slug}/${chapter + 1}`}
             className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
           >
             {t.bible.chapter} {chapter + 1} &rarr;

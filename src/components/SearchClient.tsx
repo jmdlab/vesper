@@ -154,7 +154,7 @@ export function SearchClient({ books = [] }: SearchClientProps) {
                 return (
                   <a
                     key={r.id}
-                    href={`${BASE}/${r.bookSlug}/${r.chapter}`}
+                    href={`${BASE}/bible/${r.bookSlug}/${r.chapter}`}
                     className="block rounded-lg border border-[var(--border)] p-4 transition-colors hover:bg-[var(--surface)]"
                   >
                     <p className="text-xs font-medium text-[var(--accent)]">
@@ -203,7 +203,7 @@ export function SearchClient({ books = [] }: SearchClientProps) {
             {filteredBooks.map((book) => (
               <a
                 key={book.slug}
-                href={`${BASE}/${book.slug}`}
+                href={`${BASE}/bible/${book.slug}`}
                 className="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors active:bg-[var(--surface)]"
               >
                 <span className="text-[var(--text)]">

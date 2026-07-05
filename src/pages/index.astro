@@ -2,9 +2,15 @@
 import AppLayout from '../layouts/AppLayout.astro'
 import { HomeClient } from '../components/HomeClient'
 
-// Load all meditation JSON files
+// Load all meditation JSON files. Pass only the fields HomeClient renders —
+// serializing the full scripts (EN+FR) inflated index.html to ~745 KB; the
+// field subset (mirrors home.astro) brings it down to ~53 KB.
 const meditationFiles = import.meta.glob('../content/meditations/*.json', { eager: true })
-const allMeditations = Object.values(meditationFiles).map((m: any) => m.default ?? m)
+const allMeditations = Object.values(meditationFiles)
+  .map((m: any) => m.default ?? m)
+  .map(({ slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder }: any) => ({
+    slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder,
+  }))
 ---
 
 <AppLayout title="Vesper — Rest in the Word">
