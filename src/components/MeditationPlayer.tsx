@@ -49,9 +49,13 @@ export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps
     return stored ? parseFloat(stored) : 0.015
   })
 
-  // Random track each session — no stored preference
+  // Honor the track picked in MusicBrowser (stored as its id under
+  // 'vesper-music-track'); fall back to a random track when none is selected.
   const [ambientTrackUrl] = useState(() => {
-    const track = musicTracks[Math.floor(Math.random() * musicTracks.length)]
+    const storedId = localStorage.getItem('vesper-music-track')
+    const track =
+      (storedId && musicTracks.find((t) => t.id === storedId)) ||
+      musicTracks[Math.floor(Math.random() * musicTracks.length)]
     return `${BASE}${track.file}`
   })
 
