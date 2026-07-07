@@ -1,6 +1,7 @@
 /**
  * Base path for all internal links — reads from Astro/Vite's BASE_URL.
- * Resolves to '/bible' on VPS, '/vesper' on GitHub Pages.
+ * Resolves to '' in production (site served at the vesper.pm root, base '/');
+ * overridable via the ASTRO_BASE env var at build time.
  * Trailing slash is stripped for clean path concatenation.
  */
 export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')

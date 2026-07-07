@@ -4,13 +4,11 @@ import type { Locale } from '@/lib/i18n'
 interface BibleTTSProps {
   verses: { verse: number; textEn: string; textFr: string }[]
   locale: Locale
-  autoPlay?: boolean
   playing: boolean
   onComplete?: () => void
   onStop?: () => void
   onChunkChange?: (startVerse: number, endVerse: number) => void
   onStateChange?: (state: TTSState) => void
-  chapterLabel?: string
 }
 
 export type TTSState = 'idle' | 'loading-model' | 'generating' | 'playing' | 'error'
@@ -22,7 +20,7 @@ let kokoroFailed = false
 
 const TTS_SPEED = 0.85
 
-export function BibleTTS({ verses, locale, autoPlay, playing, onComplete, onStop, onChunkChange, onStateChange }: BibleTTSProps) {
+export function BibleTTS({ verses, locale, playing, onComplete, onStop, onChunkChange, onStateChange }: BibleTTSProps) {
   const [state, setState] = useState<TTSState>('idle')
   const audioCtxRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
@@ -54,13 +52,6 @@ export function BibleTTS({ verses, locale, autoPlay, playing, onComplete, onStop
       prevVersesRef.current = verses
     }
   }, [verses, onChunkChange])
-
-  // Auto-play support
-  useEffect(() => {
-    if (autoPlay && state === 'idle' && verses.length > 0) {
-      play()
-    }
-  }, [autoPlay, verses])
 
   // React to external playing toggle
   useEffect(() => {

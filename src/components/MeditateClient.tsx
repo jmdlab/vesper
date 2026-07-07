@@ -17,7 +17,6 @@ export function MeditateClient({ meditations }: MeditateClientProps) {
 
   const handleFilter = (cat: MeditateFilter) => {
     setActiveCategory(cat)
-    sessionStorage.setItem('vesper-meditate-filter', cat)
   }
 
   const filtered = activeCategory === 'all'

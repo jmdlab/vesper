@@ -10,7 +10,6 @@ import type { MeditationData } from '@/types'
 
 interface MeditationPlayerProps {
   meditation: MeditationData
-  backHref: string
 }
 
 interface AlignmentData {
@@ -27,7 +26,7 @@ function formatTime(seconds: number): string {
 
 
 
-export function MeditationPlayer({ meditation, backHref }: MeditationPlayerProps) {
+export function MeditationPlayer({ meditation }: MeditationPlayerProps) {
   const { locale, t } = useLocale()
   const audioRef = useRef<HTMLAudioElement>(null)
   

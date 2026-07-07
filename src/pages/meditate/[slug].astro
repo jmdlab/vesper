@@ -25,9 +25,8 @@ if (!meditation) {
   return Astro.redirect(`${base}/meditate`)
 }
 
-const backHref = meditation.category === 'sos' ? `${base}/breathe` : `${base}/meditate`
 ---
 
 <AppLayout title={`${meditation.titleEn} — Vesper`}>
-  <MeditationPlayer client:load meditation={meditation} backHref={backHref} />
+  <MeditationPlayer client:load meditation={meditation} />
 </AppLayout>

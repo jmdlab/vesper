@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useCallback } from 'react'
 import type { ReactNode } from 'react'
+import { BASE } from '@/lib/constants'
 
 interface TrailingAction {
   href?: string
@@ -10,37 +11,20 @@ interface TrailingAction {
 
 interface NavBarProps {
   title: string
-  subtitle?: string
   showBack?: boolean
-  largeTitle?: boolean
   titleSize?: 'small' | 'large'
   titleAlign?: 'center' | 'left'
-  trailingAction?: TrailingAction
   trailingActions?: TrailingAction[]
 }
 
-export function NavBar({ title, subtitle, showBack = true, largeTitle = false, titleSize = 'small', titleAlign = 'center', trailingAction, trailingActions }: NavBarProps) {
-  const allActions = trailingActions ?? (trailingAction ? [trailingAction] : [])
-  const [collapsed, setCollapsed] = useState(!largeTitle)
-  const largeTitleRef = useRef<HTMLHeadingElement>(null)
-
-  useEffect(function observeLargeTitle() {
-    if (!largeTitle) return
-    const el = largeTitleRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => setCollapsed(!entry.isIntersecting),
-      { threshold: 0, rootMargin: '-80px 0px 0px 0px' }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [largeTitle])
+export function NavBar({ title, showBack = true, titleSize = 'small', titleAlign = 'center', trailingActions }: NavBarProps) {
+  const allActions = trailingActions ?? []
 
   const goBack = useCallback(() => {
     if (window.history.length > 1) {
       window.history.back()
     } else {
-      window.location.href = '/home'
+      window.location.href = `${BASE}/home`
     }
   }, [])
 
@@ -58,7 +42,7 @@ export function NavBar({ title, subtitle, showBack = true, largeTitle = false, t
 
       {/* Inline title */}
       <div
-        className={`fixed left-0 right-0 z-40 flex items-center transition-opacity duration-200 ${
+        className={`fixed left-0 right-0 z-40 flex items-center ${
           titleSize === 'large' ? 'justify-start px-6' :
           titleAlign === 'left' ? 'justify-start' : 'justify-center'
         }`}
@@ -68,7 +52,6 @@ export function NavBar({ title, subtitle, showBack = true, largeTitle = false, t
             : 'calc(env(safe-area-inset-top, 0px) + 12px)',
           height: titleSize === 'large' ? '48px' : '40px',
           pointerEvents: 'none',
-          opacity: collapsed ? 1 : 0,
           ...(titleAlign === 'left' && titleSize !== 'large' ? { paddingLeft: showBack ? '60px' : '16px' } : {}),
         }}
       >
@@ -118,21 +101,6 @@ export function NavBar({ title, subtitle, showBack = true, largeTitle = false, t
 
       {/* Spacer — clears the blur zone so content loads below it */}
       <div style={{ height: 'calc(env(safe-area-inset-top, 0px) + 80px)' }} aria-hidden="true" />
-
-      {/* Large title — in document flow, collapses into inline on scroll */}
-      {largeTitle && (
-        <div className="mb-6">
-          <h1
-            ref={largeTitleRef}
-            className="font-[family-name:var(--font-serif)] text-3xl font-semibold text-[var(--primary)]"
-          >
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mt-1 text-sm text-[var(--muted)]">{subtitle}</p>
-          )}
-        </div>
-      )}
     </>
   )
 }

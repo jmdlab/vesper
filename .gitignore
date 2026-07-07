@@ -40,3 +40,9 @@ CLAUDE.md
 docs/PIPELINE-ARCHITECTURE.md
 docs/internal/
 .claude/
+
+# Python bytecode
+__pycache__/
+
+# Generated on every build by `pnpm prebuild` (build:search)
+public/search-index.json

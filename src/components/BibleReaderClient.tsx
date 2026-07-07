@@ -24,7 +24,7 @@ interface BibleReaderClientProps {
   readingReasonFr: string
 }
 
-type ListenMode = 'off' | 'once' | 'continuous'
+type ListenMode = 'off' | 'once'
 
 export function BibleReaderClient({
   books,
@@ -44,7 +44,6 @@ export function BibleReaderClient({
   const [navTestament, setNavTestament] = useState<'OT' | 'NT'>('OT')
   const [listenMode, setListenMode] = useState<ListenMode>('off')
   const [ttsState, setTtsState] = useState<TTSState>('idle')
-  const [autoPlay, setAutoPlay] = useState(false)
   const [activeVerseRange, setActiveVerseRange] = useState<[number, number] | null>(null)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -117,20 +116,9 @@ export function BibleReaderClient({
     }
   }, [currentBook, currentChapter, books, navigateTo])
 
-  const hasNext = (() => {
-    if (!currentBook) return false
-    if (currentChapter < currentBook.chapterCount) return true
-    const idx = books.findIndex((b) => b.slug === currentBook.slug)
-    return idx < books.length - 1
-  })()
-
   // ─── Listen toggle — tap toggles on/off, no cycling ───────────────────────
   const toggleListen = useCallback(() => {
-    setListenMode(prev => {
-      if (prev === 'off') return 'once'
-      setAutoPlay(false)
-      return 'off'
-    })
+    setListenMode(prev => (prev === 'off' ? 'once' : 'off'))
   }, [])
 
   const isListening = listenMode !== 'off'
@@ -249,19 +237,10 @@ export function BibleReaderClient({
         <BibleTTS
           verses={verses}
           locale={locale}
-          autoPlay={autoPlay}
           playing={isListening}
           onStateChange={setTtsState}
-          onComplete={() => {
-            if (listenMode === 'continuous' && hasNext) {
-              setAutoPlay(true)
-              goToNext()
-            } else {
-              setAutoPlay(false)
-              setListenMode('off')
-            }
-          }}
-          onStop={() => { setAutoPlay(false); setListenMode('off') }}
+          onComplete={() => setListenMode('off')}
+          onStop={() => setListenMode('off')}
           onChunkChange={(start, end) => {
             setActiveVerseRange(start >= 0 ? [start, end] : null)
           }}
@@ -364,7 +343,6 @@ export function BibleReaderClient({
                             {i > 0 && <div className="ml-4 h-[0.33px] bg-[var(--border)]" />}
                             <button
                               onClick={() => {
-                                setAutoPlay(false)
                                 if (b.chapterCount === 1) {
                                   navigateTo(b, 1)
                                 } else {
@@ -420,7 +398,7 @@ export function BibleReaderClient({
                     {Array.from({ length: currentBook.chapterCount }, (_, i) => i + 1).map((ch) => (
                       <button
                         key={ch}
-                        onClick={() => { setAutoPlay(false); navigateTo(currentBook, ch) }}
+                        onClick={() => navigateTo(currentBook, ch)}
                         className={`flex h-11 items-center justify-center rounded-[10px] text-[15px] tabular-nums transition-colors active:scale-95 ${
                           ch === currentChapter
                             ? 'bg-[var(--accent)] font-semibold text-white'
@@ -614,7 +592,7 @@ export function BibleReaderClient({
       {/* Prev / Next chapter — between nav bar and text */}
       <nav className="mb-4 flex items-center justify-between">
         <button
-          onClick={() => { setAutoPlay(false); goToPrev() }}
+          onClick={goToPrev}
           className="flex items-center gap-1 rounded-[10px] px-3 py-2 text-[15px] text-[var(--muted)] transition-colors active:bg-[var(--surface)] active:scale-[0.97] disabled:opacity-30"
           disabled={!currentBook || (currentChapter <= 1 && books[0]?.slug === currentBook?.slug)}
           aria-label={t.bible.previousChapter}
@@ -628,7 +606,7 @@ export function BibleReaderClient({
           {currentChapter} / {currentBook?.chapterCount ?? '—'}
         </span>
         <button
-          onClick={() => { setAutoPlay(false); goToNext() }}
+          onClick={goToNext}
           className="flex items-center gap-1 rounded-[10px] px-3 py-2 text-[15px] text-[var(--muted)] transition-colors active:bg-[var(--surface)] active:scale-[0.97] disabled:opacity-30"
           disabled={!currentBook || (currentChapter >= (currentBook?.chapterCount ?? 0) && books[books.length - 1]?.slug === currentBook?.slug)}
           aria-label={t.bible.nextChapter}
@@ -655,7 +633,7 @@ export function BibleReaderClient({
               onClick={() => currentBook && fetchChapter(currentBook.slug, currentChapter)}
               className="mt-4 rounded-lg bg-[var(--surface)] px-4 py-2 text-sm text-[var(--accent)] transition-colors active:opacity-70"
             >
-              {t.bible.next === 'Next' ? 'Retry' : 'Réessayer'}
+              {t.ui.retry}
             </button>
           </div>
         ) : (
