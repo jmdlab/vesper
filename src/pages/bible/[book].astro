@@ -24,8 +24,29 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
 if (!bookMeta) {
   return Astro.redirect(`${base}/bible`)
 }
+
+// SEO: unique description + book structured data
+const description = `The Book of ${bookMeta.nameEn} — ${bookMeta.chapterCount} chapters, read and listen on Vesper.`
+const bookUrl = `https://vesper.pm/bible/${bookSlug}/`
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Bible', item: 'https://vesper.pm/bible/' },
+      { '@type': 'ListItem', position: 2, name: bookMeta.nameEn, item: bookUrl },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: bookMeta.nameEn,
+    url: bookUrl,
+    isPartOf: { '@type': 'CreativeWork', name: 'The Bible', url: 'https://vesper.pm/bible/' },
+  },
+]
 ---
 
-<AppLayout title={`${bookMeta.nameEn} — Vesper`}>
+<AppLayout title={`${bookMeta.nameEn} — Vesper`} description={description} jsonLd={jsonLd}>
   <ChapterGridClient client:only="react" book={bookMeta} />
 </AppLayout>

@@ -4,11 +4,23 @@ import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
   title?: string
+  description?: string
+  canonical?: string
+  jsonLd?: object | object[]
 }
 
-const { title = 'Vesper — Rest in the Word' } = Astro.props
+const {
+  title = 'Vesper — Rest in the Word',
+  description = 'Bible meditation, guided prayer, breathing exercises, and sleep.',
+  canonical,
+  jsonLd,
+} = Astro.props
 const currentPath = Astro.url.pathname
 const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+const canonicalUrl = canonical ?? `https://vesper.pm${currentPath}`
+// Generic app schema only on the app's landing pages — content pages carry their own JSON-LD.
+const normPath = (base ? currentPath.replace(base, '') : currentPath).replace(/\/$/, '') || '/'
+const showAppSchema = normPath === '/' || normPath === '/about'
 ---
 
 <html lang="en">
@@ -21,25 +33,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
     <meta name="theme-color" content="#0c0807" media="(prefers-color-scheme: dark)" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="Bible meditation, guided prayer, breathing exercises, and sleep." />
-    <link rel="canonical" href={`https://vesper.pm${currentPath}`} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="Bible meditation, guided prayer, breathing exercises, and sleep." />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content="https://vesper.pm/icon-512.png" />
-    <meta property="og:url" content={`https://vesper.pm${currentPath}`} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Vesper" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content="Bible meditation, guided prayer, breathing exercises, and sleep." />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://vesper.pm/icon-512.png" />
 
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify({
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {showAppSchema && <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Vesper",
@@ -52,7 +65,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '')
         "price": "0",
         "priceCurrency": "USD"
       }
-    })} />
+    })} />}
 
     <link rel="manifest" href={`${base}/manifest.json`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -10,9 +10,10 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --port 3100",
-    "build": "astro build",
+    "build": "astro build && pnpm build:sitemap",
     "preview": "astro preview --port 3100",
     "build:search": "tsx scripts/build-search-index.ts",
+    "build:sitemap": "tsx scripts/build-sitemap.ts",
     "prebuild": "pnpm build:search",
     "check": "astro check"
   },
