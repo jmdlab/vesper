@@ -7,9 +7,14 @@ function getLocaleFromStorage(): Locale {
   return (localStorage.getItem('vesper-locale') as Locale) ?? 'en'
 }
 
-function getLocaleFromDOM(): Locale {
-  if (typeof document === 'undefined') return 'en'
-  return (document.documentElement.dataset.locale as Locale) ?? 'en'
+// Server snapshot MUST be a constant matching what Astro SSR/build actually
+// renders (default locale 'en', per <html lang="en"> + all 'en' fallbacks).
+// The inline <head> script mutates document.documentElement.dataset.locale to
+// 'fr' from localStorage BEFORE hydration, so reading the DOM here caused React
+// #418 hydration mismatches for fr users. Post-hydration, getSnapshot switches
+// to the real value via a normal, error-free re-render.
+function getServerSnapshot(): Locale {
+  return 'en'
 }
 
 function subscribe(callback: () => void) {
@@ -23,7 +28,7 @@ function subscribe(callback: () => void) {
 }
 
 export function useLocale() {
-  const locale = useSyncExternalStore(subscribe, getLocaleFromStorage, getLocaleFromDOM)
+  const locale = useSyncExternalStore(subscribe, getLocaleFromStorage, getServerSnapshot)
 
   const setLocale = useCallback((l: Locale) => {
     localStorage.setItem('vesper-locale', l)
