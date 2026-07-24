@@ -48,5 +48,5 @@ const jsonLd = [
 ---
 
 <AppLayout title={`${bookMeta.nameEn} — Vesper`} description={description} jsonLd={jsonLd}>
-  <ChapterGridClient client:only="react" book={bookMeta} />
+  <ChapterGridClient client:load book={bookMeta} />
 </AppLayout>

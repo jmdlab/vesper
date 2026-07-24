@@ -61,7 +61,7 @@ const jsonLd = [
 
 <AppLayout title={`${bookMeta.nameEn} ${chapterNum} — Vesper`} description={description} jsonLd={jsonLd}>
   <ChapterReaderClient
-    client:only="react"
+    client:load
     book={bookMeta}
     chapter={chapterNum}
     verses={verses}

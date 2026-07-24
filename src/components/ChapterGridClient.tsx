@@ -27,7 +27,7 @@ export function ChapterGridClient({ book }: ChapterGridClientProps) {
         {Array.from({ length: book.chapterCount }, (_, i) => i + 1).map((ch) => (
           <a
             key={ch}
-            href={`${BASE}/bible/${book.slug}/${ch}`}
+            href={`${BASE}/bible/${book.slug}/${ch}/`}
             className="flex aspect-square items-center justify-center rounded-lg border border-[var(--border)] tabular-nums text-sm font-medium text-[var(--primary)] transition-colors hover:bg-[var(--surface)] hover:border-[var(--accent)]"
           >
             {ch}
