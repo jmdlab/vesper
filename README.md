@@ -126,10 +126,10 @@ border   #d9d3cf               border   #2f2a27
 ## Quick Start
 
 ```bash
-git clone https://github.com/probablyagoodusername/vesper.git
+git clone https://github.com/jmdlab/vesper.git
 cd vesper
 pnpm install
-pnpm dev          # localhost:3100
+pnpm dev          # local dev server (port set in package.json)
 ```
 
 No database, no Docker, no environment variables needed for development. The app runs entirely from static JSON content.
@@ -187,7 +187,6 @@ vesper/
 │   ├── prepare-tts.ts          # Script text preparation
 │   ├── segment-audio.ts        # Audio segmentation (intro/breathing/core/outro)
 │   ├── build-search-index.ts   # FlexSearch index builder
-│   ├── import-bible.ts         # Bible data import
 │   └── rewrites/               # Raw meditation scripts (.txt)
 ├── audio-storage/              # Generated audio (not in repo)
 │   ├── en/                     # Katherine (V1)
@@ -219,7 +218,7 @@ Meditation categories: `sleep`, `morning`, `anxiety`, `self-compassion`, `contem
 
 ## Adding Meditations
 
-Full guide: [CREATING-MEDITATIONS.md](CREATING-MEDITATIONS.md)
+Full guide: [docs/creating-meditations.md](docs/creating-meditations.md)
 
 Quick version:
 
