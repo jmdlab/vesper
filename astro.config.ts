@@ -18,10 +18,10 @@ export default defineConfig({
       exclude: ['onnxruntime-node'],
     },
     server: {
-      allowedHosts: ['apps.denis.me'],
+      allowedHosts: process.env.ASTRO_DEV_HOSTS?.split(',') ?? [],
     },
     preview: {
-      allowedHosts: ['apps.denis.me'],
+      allowedHosts: process.env.ASTRO_DEV_HOSTS?.split(',') ?? [],
     },
   },
   prefetch: {
