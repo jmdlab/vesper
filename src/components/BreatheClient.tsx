@@ -33,6 +33,7 @@ export function BreatheClient({ protocols }: BreatheClientProps) {
                       descEn={p.descEn}
                       descFr={p.descFr}
                       durationMin={p.durationMin}
+                      durationMinFr={p.durationMinFr}
                       audioPathEn={p.audioPathEn}
                       locale={locale}
                     />
@@ -53,6 +54,7 @@ export function BreatheClient({ protocols }: BreatheClientProps) {
                 descEn={nsdr.descEn}
                 descFr={nsdr.descFr}
                 durationMin={nsdr.durationMin}
+                durationMinFr={nsdr.durationMinFr}
                 audioPathEn={nsdr.audioPathEn}
                 locale={locale}
               />
@@ -73,6 +75,7 @@ export function BreatheClient({ protocols }: BreatheClientProps) {
                       descEn={p.descEn}
                       descFr={p.descFr}
                       durationMin={p.durationMin}
+                      durationMinFr={p.durationMinFr}
                       audioPathEn={p.audioPathEn}
                       locale={locale}
                     />

@@ -64,6 +64,7 @@ export function MeditateClient({ meditations }: MeditateClientProps) {
                   descEn={m.descEn}
                   descFr={m.descFr}
                   durationMin={m.durationMin}
+                  durationMinFr={m.durationMinFr}
                   audioPathEn={m.audioPathEn}
                   locale={locale}
                   durationLabel={t.meditate.duration}

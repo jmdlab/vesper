@@ -8,6 +8,7 @@ interface MeditationCardProps {
   descEn: string
   descFr: string
   durationMin: number
+  durationMinFr?: number
   isSleep?: boolean
   audioPathEn: string | null
   locale: Locale
@@ -22,6 +23,7 @@ export function MeditationCard({
   descEn,
   descFr,
   durationMin,
+  durationMinFr,
   isSleep,
   audioPathEn,
   locale,
@@ -56,7 +58,7 @@ export function MeditationCard({
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <span className="tabular-nums text-xs text-[var(--muted)]">
-            {durationMin} {durationLabel}
+            {locale === 'fr' ? (durationMinFr ?? durationMin) : durationMin} {durationLabel}
           </span>
           <svg width="8" height="8" viewBox="0 0 16 16" fill="var(--muted)" className="shrink-0 opacity-40">
             <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>

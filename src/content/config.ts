@@ -12,6 +12,7 @@ const meditations = defineCollection({
     scriptFr: z.string(),
     category: z.string(),
     durationMin: z.number(),
+    durationMinFr: z.number().optional(),
     isSleep: z.boolean(),
     verseRefs: z.unknown().nullable(),
     audioPathEn: z.string().nullable(),

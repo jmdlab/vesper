@@ -33,7 +33,7 @@ export function SleepReader({ meditation }: SleepReaderProps) {
         </p>
         <div className="mt-4">
           <span className="tabular-nums text-xs" style={{ color: 'var(--sleep-muted)' }}>
-            {meditation.durationMin} min
+            {locale === 'fr' ? (meditation.durationMinFr ?? meditation.durationMin) : meditation.durationMin} min
           </span>
         </div>
       </div>

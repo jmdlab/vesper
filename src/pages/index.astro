@@ -8,8 +8,8 @@ import { HomeClient } from '../components/HomeClient'
 const meditationFiles = import.meta.glob('../content/meditations/*.json', { eager: true })
 const allMeditations = Object.values(meditationFiles)
   .map((m: any) => m.default ?? m)
-  .map(({ slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder }: any) => ({
-    slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder,
+  .map(({ slug, titleEn, titleFr, descEn, descFr, durationMin, durationMinFr, audioPathEn, isSleep, category, sortOrder }: any) => ({
+    slug, titleEn, titleFr, descEn, descFr, durationMin, durationMinFr, audioPathEn, isSleep, category, sortOrder,
   }))
 ---
 

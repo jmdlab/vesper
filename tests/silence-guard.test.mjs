@@ -27,6 +27,9 @@ assert.ok(g.durationMatches(9, 9 * 60 * 1.14))
 assert.ok(!g.durationMatches(9, 30.7 * 60), 'isaiah-renew: listed 9, real 30.7 min')
 assert.ok(!g.durationMatches(32, 23.2 * 60), 'sleep-forgiveness: listed 32, real 23.2 min')
 assert.equal(g.listedMinutesFor(23.2 * 60), 23)
+assert.ok(g.durationMatches(1, 0.4 * 60), 'a 25 s prayer listed as 1 min: the card cannot say less')
+assert.ok(g.durationMatches(2, 2.3 * 60), 'nearest whole minute is always accepted')
+assert.ok(!g.durationMatches(3, 2.3 * 60), 'but not a different minute')
 console.log('ok duration rule')
 
 // 3. alignment shift

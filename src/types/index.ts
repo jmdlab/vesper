@@ -39,6 +39,7 @@ export interface MeditationData {
   scriptFr: string
   category: string
   durationMin: number
+  durationMinFr?: number
   isSleep: boolean
   audioPathEn: string | null
   audioPathFr: string | null

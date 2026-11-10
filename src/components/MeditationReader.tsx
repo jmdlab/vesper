@@ -25,7 +25,7 @@ export function MeditationReader({ meditation }: MeditationReaderProps) {
         <p className="mt-3 leading-relaxed text-[var(--muted)]">{desc}</p>
         <div className="mt-4 flex items-center gap-3">
           <span className="tabular-nums text-xs text-[var(--muted)]">
-            {meditation.durationMin} {t.meditate.duration}
+            {locale === 'fr' ? (meditation.durationMinFr ?? meditation.durationMin) : meditation.durationMin} {t.meditate.duration}
           </span>
           <span className="rounded-full bg-[var(--surface)] px-2.5 py-0.5 text-xs text-[var(--muted)]">
             {catLabel}

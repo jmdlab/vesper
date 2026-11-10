@@ -89,9 +89,11 @@ export function probeDuration(mp3Path: string): number {
   ], { encoding: 'utf-8' }).trim())
 }
 
-/** true when the listed minutes are within ±15 % of the real audio length. */
+/** true when the listed minutes are within ±15 % of the real audio length. The card shows whole minutes, so the nearest
+ *  whole minute always counts as right (a 25 s prayer listed as 1 min). */
 export function durationMatches(listedMin: number, realSeconds: number): boolean {
   if (!(listedMin > 0) || !(realSeconds > 0)) return false
+  if (listedMin === listedMinutesFor(realSeconds)) return true
   return Math.abs(realSeconds / 60 - listedMin) / listedMin <= DURATION_TOLERANCE
 }
 

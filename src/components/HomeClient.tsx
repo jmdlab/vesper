@@ -12,6 +12,7 @@ interface Meditation {
   descEn: string
   descFr: string
   durationMin: number
+  durationMinFr?: number
   isSleep: boolean
   category: string
   audioPathEn: string | null
@@ -113,7 +114,7 @@ function MeditationRow({ m, locale, isSleep }: { m: Meditation; locale: string; 
         <p className="mt-0.5 truncate text-xs text-[var(--muted)]">{desc}</p>
       </div>
       <span className="shrink-0 tabular-nums text-xs text-[var(--muted)]">
-        {m.durationMin} min
+        {locale === 'fr' ? (m.durationMinFr ?? m.durationMin) : m.durationMin} min
       </span>
     </a>
   )

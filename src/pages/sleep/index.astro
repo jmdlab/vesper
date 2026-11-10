@@ -7,8 +7,8 @@ const sleepMeditations = Object.values(meditationFiles)
   .map((m: any) => m.default ?? m)
   .filter((m: any) => m.isSleep)
   .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
-  .map(({ slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder }: any) => ({
-    slug, titleEn, titleFr, descEn, descFr, durationMin, audioPathEn, isSleep, category, sortOrder,
+  .map(({ slug, titleEn, titleFr, descEn, descFr, durationMin, durationMinFr, audioPathEn, isSleep, category, sortOrder }: any) => ({
+    slug, titleEn, titleFr, descEn, descFr, durationMin, durationMinFr, audioPathEn, isSleep, category, sortOrder,
   }))
 ---
 

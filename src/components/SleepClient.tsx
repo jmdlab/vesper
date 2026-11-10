@@ -32,6 +32,7 @@ export function SleepClient({ meditations }: SleepClientProps) {
                 descEn={m.descEn}
                 descFr={m.descFr}
                 durationMin={m.durationMin}
+                durationMinFr={m.durationMinFr}
                 isSleep
                 audioPathEn={m.audioPathEn}
                 locale={locale}
