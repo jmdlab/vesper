@@ -1,4 +1,5 @@
-const CACHE_NAME = 'vesper-v1'
+// v2 (2026-11-10): pages became network-first; bumping the name purges HTML cached cache-first by v1.
+const CACHE_NAME = 'vesper-v2'
 
 const APP_SHELL = [
   '/',
@@ -60,7 +61,13 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // App shell (HTML, CSS, JS) — cache-first with network update
+  // Pages (HTML navigations) — network-first so a deploy reaches returning visitors; the cache is the offline fallback
+  if (request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html')) {
+    event.respondWith(networkFirst(request))
+    return
+  }
+
+  // Hashed bundles (CSS, JS) — cache-first: a new deploy ships new file names
   event.respondWith(cacheFirst(request))
 })
 
