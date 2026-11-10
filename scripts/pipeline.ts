@@ -19,6 +19,7 @@ import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execFileSync } from 'child_process'
 import { acquireLock } from './lib/lockfile.js'
+import { copyAudio } from './lib/copy-audio.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -347,22 +348,11 @@ function handleDeploy(): void {
   // 3. Copy audio files
   if (!skipAudio) {
     console.log('3. Copying audio files...')
-    const audioTarget = join(DEPLOY_DIR, 'audio')
-    for (const langDir of ['en', 'en-v2', 'fr']) {
-      const src = join(AUDIO_DIR, langDir)
-      const dest = join(audioTarget, langDir)
-      if (existsSync(src)) {
-        if (!existsSync(dest)) mkdirSync(dest, { recursive: true })
-        try {
-          cpSync(src, dest, { recursive: true })
-          const audioCount = readdirSync(src).filter(f => f.endsWith('.mp3')).length
-          const segDir = join(src, 'segments')
-          const segCount = existsSync(segDir) ? readdirSync(segDir).length : 0
-          console.log(`   ${langDir}: ${audioCount} audio files${segCount ? `, ${segCount} segmented meditations` : ''} copied`)
-        } catch (e) {
-          console.error(`   Failed to copy ${langDir}: ${e}`)
-        }
-      }
+    const failures = copyAudio(AUDIO_DIR, join(DEPLOY_DIR, 'audio'), ['en', 'en-v2', 'fr'])
+    if (failures.length) {
+      for (const f of failures) console.error(`   Failed to copy ${f}`)
+      console.error('Deploy FAILED: audio not copied — the live audio and transcripts are stale. Git push skipped.')
+      process.exit(1)
     }
     console.log('')
   }
