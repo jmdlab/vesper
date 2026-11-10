@@ -331,7 +331,7 @@ function handleDeploy(): void {
   if (existsSync(DEPLOY_DIR)) {
     console.log(`2. Deploying dist/ to ${DEPLOY_DIR}/...`)
     try {
-      run('sudo', ['rsync', '-a', '--delete',
+      run('rsync', ['-a', '--delete', // deploy root belongs to ubuntu: no sudo (a password prompt blocked every deploy)
         '--exclude=audio/', // preserve audio separately
         `${DIST_DIR}/`, `${DEPLOY_DIR}/`])
       console.log('   Deploy complete.\n')
