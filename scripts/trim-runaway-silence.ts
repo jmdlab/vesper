@@ -6,7 +6,7 @@
  * This removes the dead air. If the render ALSO dropped speech, that speech is still missing: regenerate (paid) later.
  *
  * Usage:
- *   npx tsx scripts/trim-runaway-silence.ts <lang> <slug> --backup-dir=<dir> [--dry-run] [--audio-dir=<dir>]
+ *   npx tsx scripts/trim-runaway-silence.ts <lang> <slug> --backup-dir=<dir> [--dry-run] [--audio-dir=<dir>] [--noise-db=-50]
  *     lang: en | en-v2 | fr. The original mp3+json are copied to <backup-dir>/<lang>/ first (never overwritten).
  * Idempotent: a file with no runaway silence is left byte-identical (exit 0, "nothing to trim").
  */
@@ -49,7 +49,10 @@ const med = validateMeditation(slug, JSON.parse(readFileSync(join(contentDir, `$
 const script = lang === 'fr' ? med.scriptFr : med.scriptEn
 const requested = longestRequestedPause(prepareScript(script, med.category, med.breathing != null))
 const duration = probeDuration(mp3)
-const runaway = runawaySilences(detectSilences(mp3, 30), requested)
+// --noise-db=-45 for a file whose dead air carries faint blips above -50 dB (en/morning-armor-of-god, 10/11): check the cuts in --dry-run first.
+const noiseDb = Number(flag('noise-db') ?? -50)
+if (!Number.isFinite(noiseDb) || noiseDb > -40 || noiseDb < -70) die('--noise-db must be between -70 and -40')
+const runaway = runawaySilences(detectSilences(mp3, 30, noiseDb), requested)
 const cuts = trimCuts(runaway)
 
 if (cuts.length === 0) {
