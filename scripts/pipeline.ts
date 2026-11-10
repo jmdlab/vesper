@@ -334,6 +334,7 @@ function handleDeploy(): void {
     try {
       run('rsync', ['-a', '--delete', // deploy root belongs to ubuntu: no sudo (a password prompt blocked every deploy)
         '--exclude=audio/', // preserve audio separately
+        '--filter=P /.*', // never delete hidden top-level folders that live only on the server (e.g. a parked audio copy)
         `${DIST_DIR}/`, `${DEPLOY_DIR}/`])
       console.log('   Deploy complete.\n')
     } catch (e) {
