@@ -53,13 +53,29 @@ DEPLOYED_DIRS = {
 _whisper_model = None
 
 
+class _FasterWhisper:
+    """openai-whisper's transcribe() shape ({"segments": [{"words": [...]}]}) on top of faster-whisper."""
+
+    def __init__(self, model_size: str):
+        from faster_whisper import WhisperModel
+        self._m = WhisperModel(model_size, device="cpu", compute_type="int8")
+
+    def transcribe(self, path: str, language: str, word_timestamps: bool = True) -> dict:
+        segs, _ = self._m.transcribe(path, language=language, word_timestamps=word_timestamps)
+        return {"segments": [{"words": [{"word": w.word, "start": w.start, "end": w.end} for w in (s.words or [])]} for s in segs]}
+
+
 def get_whisper_model(model_size: str = "small"):
     """Lazy-load Whisper model."""
     global _whisper_model
     if _whisper_model is None:
-        import whisper
         print(f"Loading Whisper model ({model_size})...", flush=True)
-        _whisper_model = whisper.load_model(model_size)
+        try:
+            import whisper
+            _whisper_model = whisper.load_model(model_size)
+        except ImportError:
+            # The server has faster-whisper (~/data/stt/venv), not openai-whisper: same words and timings, same result shape.
+            _whisper_model = _FasterWhisper(model_size)
         print("Model loaded.", flush=True)
     return _whisper_model
 
