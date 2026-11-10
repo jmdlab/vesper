@@ -97,7 +97,7 @@ export function MusicBrowser() {
                   <p className="text-sm font-medium text-[var(--primary)]">
                     {t.ui.random}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-[var(--muted)]">
+                  <p className="mt-0.5 text-xs text-[var(--muted)]">
                     {t.ui.differentTrackEachSession}
                   </p>
                 </div>
@@ -150,7 +150,7 @@ export function MusicBrowser() {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-[var(--primary)]">{name}</p>
                       {isSelected && (
-                        <p className="mt-0.5 text-[11px] text-[var(--accent)]">
+                        <p className="mt-0.5 text-xs text-[var(--accent)]">
                           {t.ui.activeTrack}
                         </p>
                       )}

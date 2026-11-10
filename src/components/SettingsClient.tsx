@@ -120,7 +120,7 @@ export function SettingsClient() {
                   {v.name}
                 </span>
                 {v.disabled ? (
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--muted)]">{t.ui.comingSoon}</span>
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">{t.ui.comingSoon}</span>
                 ) : voice === v.key ? (
                   <CheckIcon />
                 ) : null}

@@ -13,6 +13,10 @@
   --color-border: #d9d3cf;
   --color-error: #C44A3F;
   --color-success: #4A7C5B;
+
+  /* 13 px text floor (shared/DESIGN.md): the smallest step is 13 px, never 12 */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: calc(1.125 / 0.8125);
 }
 
 /* Prevent white flash + extend document into safe area zone */

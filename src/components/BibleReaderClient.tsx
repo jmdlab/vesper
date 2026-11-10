@@ -334,7 +334,7 @@ export function BibleReaderClient({
                   {/* Grouped list sections */}
                   {bookCategories.map((group) => (
                     <div key={group.label} className="mb-4">
-                      <p className="mb-1 px-4 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                      <p className="mb-1 px-4 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
                         {group.label}
                       </p>
                       <div className="overflow-hidden rounded-[10px] bg-[var(--surface)]">
@@ -389,7 +389,7 @@ export function BibleReaderClient({
                     </span>
                   </button>
 
-                  <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--muted)]">
+                  <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
                     {t.bible.chapter}
                   </p>
 

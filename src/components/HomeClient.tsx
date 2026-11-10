@@ -199,7 +199,7 @@ export function HomeClient({ allMeditations, readingLabel, readingLabelFr, readi
               <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
                 {locale === 'fr' ? liturgy.current.descriptionFr : liturgy.current.description}
               </p>
-              <div className="mt-2 flex items-center justify-between">
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                 {liturgy.upcoming ? (
                   <p className="text-xs text-[var(--accent)]">
                     {locale === 'fr'
