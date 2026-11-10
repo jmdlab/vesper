@@ -13,11 +13,16 @@ import { join, resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { execFileSync } from 'child_process'
 import { validateMeditation } from './lib/validate-meditation.js'
+import { prepareScript } from './prepare-tts.js'
+import {
+  detectSilencesCached, runawaySilences, longestRequestedPause, allowedSilenceSeconds, durationMatches, listedMinutesFor,
+} from './lib/silence-guard.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
-const CONTENT_DIR = join(PROJECT_ROOT, 'src', 'content', 'meditations')
-const AUDIO_DIR = join(PROJECT_ROOT, 'audio-storage')
+// Overridable for tests only (tests/silence-guard.test.mjs builds a fixture tree).
+const CONTENT_DIR = process.env.VESPER_QA_CONTENT_DIR ?? join(PROJECT_ROOT, 'src', 'content', 'meditations')
+const AUDIO_DIR = process.env.VESPER_QA_AUDIO_DIR ?? join(PROJECT_ROOT, 'audio-storage')
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -31,6 +36,7 @@ interface MeditationJSON {
   slug: string
   category: string
   durationMin: number
+  durationMinFr?: number
   scriptEn: string
   scriptFr?: string
   breathing: {
@@ -297,8 +303,39 @@ function qaMediation(slug: string, lang: string): QAResult {
     check(checks, 'breathing null (natural/narrated)', true, 'no clip-based breathing expected')
   }
 
-  // 7. Script text vs alignment text comparison
   const scriptField = lang === 'fr' ? med.scriptFr : med.scriptEn
+
+  // 6b. No silence longer than the script asks for (audit 10/11/2026 round 5). ElevenLabs v3 can turn a chain of
+  // [long pause] tags into 4–13 min of dead air; 22 shipped files had it. Measured on the audio itself, against the
+  // longest pause the prepared script requests anywhere — never warn-only.
+  if (scriptField) {
+    const requested = longestRequestedPause(prepareScript(scriptField, med.category, med.breathing != null))
+    const allowed = allowedSilenceSeconds(requested)
+    const runaway = runawaySilences(detectSilencesCached(mp3Path, 30, join(AUDIO_DIR, '.qa-silence-cache.json')), requested)
+    check(
+      checks,
+      'no silence longer than the script asks for',
+      runaway.length === 0,
+      runaway.length === 0
+        ? `OK (script asks ≤${requested}s, allowed ${allowed.toFixed(0)}s)`
+        : `${runaway.length} silence(s) over ${allowed.toFixed(0)}s (script asks ≤${requested}s): ` +
+          runaway.slice(0, 3).map(r => `${r.start.toFixed(0)}–${r.end.toFixed(0)}s (${((r.end - r.start) / 60).toFixed(1)} min)`).join(', '),
+    )
+  }
+
+  // 6c. Listed duration matches what a listener gets by default (v1 voice; FR card reads durationMinFr when set).
+  if (lang === 'en' || lang === 'fr') {
+    const listed = lang === 'fr' ? (med.durationMinFr ?? med.durationMin) : med.durationMin
+    check(
+      checks,
+      'listed duration matches audio (±15 %)',
+      durationMatches(listed, actualDuration),
+      `listed ${listed} min, audio ${(actualDuration / 60).toFixed(1)} min (→ ${listedMinutesFor(actualDuration)})` +
+        (lang === 'fr' && med.durationMinFr == null ? ' [durationMin]' : ''),
+    )
+  }
+
+  // 7. Script text vs alignment text comparison
   if (scriptField) {
     // Extract spoken lines from script (strip [BREATHING:...], [Xs pause], stage directions)
     const scriptLines = scriptField
@@ -398,8 +435,8 @@ function qaMediation(slug: string, lang: string): QAResult {
 const args = process.argv.slice(2)
 const verbose = args.includes('--verbose')
 const langArgRaw = args.find(a => a.startsWith('--lang='))?.split('=')[1]
-// Default: check BOTH languages. --lang=en or --lang=fr restricts.
-const langs: string[] = langArgRaw ? [langArgRaw] : ['en', 'fr']
+// Default: every served voice — en (v1, default), en-v2 (alternate EN voice), fr. --lang= restricts.
+const langs: string[] = langArgRaw ? [langArgRaw] : ['en', 'en-v2', 'fr']
 const slugArg = args.find(a => !a.startsWith('--'))
 
 // Find all meditation slugs. No prefix filter — audit everything shipped.
@@ -432,6 +469,8 @@ for (const slug of allSlugs) {
     const med = JSON.parse(readFileSync(medPath, 'utf-8'))
     const scriptField = lang === 'fr' ? med.scriptFr : med.scriptEn
     if (!scriptField || String(scriptField).trim().length === 0) continue
+    // The alternate voice is optional per meditation: check it only where it was produced.
+    if (lang === 'en-v2' && !existsSync(join(AUDIO_DIR, lang, `${slug}.mp3`)) && !existsSync(join(AUDIO_DIR, lang, `${slug}.json`))) continue
 
     const result = qaMediation(slug, lang)
     const fails = result.checks.filter(c => c.status === 'fail')

@@ -2,7 +2,7 @@
  * Exponential backoff retry for flaky network calls.
  *
  * Retries on ElevenLabs/network transient failures (429, 500, 502, 503, 504,
- * ECONNRESET, ETIMEDOUT). Does NOT retry on 400/401/403 (authoritative failures).
+ * ECONNRESET, ETIMEDOUT) and on a RUNAWAY_SILENCE render (lib/silence-guard.ts). Does NOT retry on 400/401/403.
  */
 
 const RETRY_STATUS = new Set([429, 500, 502, 503, 504])
@@ -45,6 +45,8 @@ function shouldRetry(err: unknown): boolean {
     const statusMatch = err.message.match(/API error (\d+)/)
     if (statusMatch && RETRY_STATUS.has(Number(statusMatch[1]))) return true
     if (RETRY_CODE_RE.test(err.message)) return true
+    // A TTS render with minutes of unrequested silence (lib/silence-guard.ts): ask for a fresh render.
+    if (err.message.startsWith('RUNAWAY_SILENCE')) return true
   }
   return false
 }

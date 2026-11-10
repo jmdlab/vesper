@@ -20,6 +20,7 @@ import { prepareScript, chunkText, getVoiceSettings } from './prepare-tts.js'
 import { validateMeditation } from './lib/validate-meditation.js'
 import { retry } from './lib/retry.js'
 import { buildBreathingChunk } from './lib/breathing-audio.js'
+import { assertChunkHasNoRunawaySilence } from './lib/silence-guard.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = resolve(__dirname, '..')
@@ -243,7 +244,12 @@ async function generateForMeditation(
         }
         console.log(`      Chunk ${i + 1}/${chunks.length} (${chunks[i].length} chars)...`)
         const { audio, alignment } = await retry(
-          () => callTTS(chunks[i], voiceId, voiceSettings),
+          async () => {
+            const r = await callTTS(chunks[i], voiceId, voiceSettings)
+            // v3 can render [long pause] chains as minutes of dead air (audit 10/11/2026 round 5): re-render instead.
+            assertChunkHasNoRunawaySilence(r.audio, chunks[i], join(outDir, `_chunk_check_${process.pid}.mp3`))
+            return r
+          },
           {
             maxAttempts: 4,
             onRetry: (attempt, err, waitMs) => {
